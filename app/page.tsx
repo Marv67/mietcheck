@@ -92,7 +92,7 @@ export default function Page() {
       `}</style>
 
       {/* ─── NAV ─── */}
-      <header style={{ padding: "14px 28px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--line)", background: "rgba(248,247,244,.85)", backdropFilter: "blur(12px)", position: "sticky", top: 0, zIndex: 10 }}>
+      <header className="site-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--line)", background: "rgba(248,247,244,.85)", backdropFilter: "blur(12px)", position: "sticky", top: 0, zIndex: 10 }}>
         <a href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", color: "inherit" }} aria-label="Zur Startseite">
           <div style={{ width: 30, height: 30, borderRadius: 7, background: "var(--blue)", display: "grid", placeItems: "center" }} aria-hidden="true">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true" focusable="false">
@@ -136,7 +136,7 @@ export default function Page() {
           {/* ───── UPLOAD (Client-Insel) ───── */}
           <UploadFlow />
 
-          <div style={{ display: "flex", justifyContent: "center", gap: 20, marginTop: 18, fontSize: 12, color: "var(--dim)" }}>
+          <div className="hero-trust-strip" style={{ color: "var(--dim)" }}>
             <span>🔒 Daten werden nicht gespeichert</span>
             <span>⚡ Ergebnis in 30 Sekunden</span>
             <span>✓ 3 Klauseln kostenlos</span>
@@ -153,7 +153,7 @@ export default function Page() {
           <p id="trust-heading" style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 1.5, color: "var(--dim)", marginBottom: 16, fontWeight: 500 }}>
             Analyse basiert auf
           </p>
-          <ul style={{ display: "flex", justifyContent: "center", gap: 32, alignItems: "center", flexWrap: "wrap", opacity: 0.45, listStyle: "none", padding: 0, margin: 0 }}>
+          <ul style={{ display: "flex", justifyContent: "center", gap: 18, rowGap: 8, alignItems: "center", flexWrap: "wrap", opacity: 0.45, listStyle: "none", padding: 0, margin: 0 }}>
             {["Bundesgerichtshof", "Bürgerliches Gesetzbuch", "Deutscher Mieterbund", "Aktuelle Rechtsprechung 2025/26"].map((t) => (
               <li key={t} style={{ fontSize: 13, fontWeight: 600, letterSpacing: -0.2 }}>
                 {t}
@@ -167,7 +167,7 @@ export default function Page() {
           <h2 id="howitworks-heading" style={{ fontFamily: "var(--font-serif), Georgia, serif", fontSize: 30, fontWeight: 400, textAlign: "center", marginBottom: 40 }}>
             So funktioniert&apos;s
           </h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16 }}>
+          <div className="grid-cards grid-cards--3">
             {HOW_IT_WORKS.map((s) => (
               <div key={s.n} style={{ background: "var(--card)", border: "1px solid var(--line)", borderRadius: 14, padding: "28px 22px" }}>
                 <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--blue)", fontWeight: 600, marginBottom: 12 }}>{s.n}</div>
@@ -195,7 +195,7 @@ export default function Page() {
                   {LANDING_CLAUSES.filter((c) => c.cat === cat).length} Klauseln
                 </span>
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+              <div className="grid-clauses-pair">
                 {LANDING_CLAUSES.filter((c) => c.cat === cat).map((c) => (
                   <div key={c.id} style={{ background: "var(--card)", border: "1px solid var(--line)", borderRadius: 10, padding: "12px 14px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 }}>
                     <span style={{ fontSize: 13, fontWeight: 500, lineHeight: 1.35 }}>{c.name}</span>
@@ -214,7 +214,7 @@ export default function Page() {
           <h2 id="testimonials-heading" style={{ fontFamily: "var(--font-serif), Georgia, serif", fontSize: 30, fontWeight: 400, textAlign: "center", marginBottom: 36 }}>
             Das sagen unsere Nutzer
           </h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 14 }}>
+          <div className="grid-cards grid-cards--3">
             {TESTIMONIALS.map((t, i) => (
               <figure key={i} style={{ background: "var(--card)", border: "1px solid var(--line)", borderRadius: 14, padding: "22px 18px", margin: 0 }}>
                 <div style={{ display: "flex", gap: 2, marginBottom: 12 }} aria-label="5 von 5 Sternen">
@@ -238,7 +238,7 @@ export default function Page() {
           <h2 id="pricing-heading" style={{ fontFamily: "var(--font-serif), Georgia, serif", fontSize: 30, fontWeight: 400, textAlign: "center", marginBottom: 36 }}>
             Einfache Preise
           </h2>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+          <div className="grid-cards grid-cards--2">
             <div style={{ background: "var(--card)", border: "1px solid var(--line)", borderRadius: 14, padding: "28px 22px" }}>
               <p style={{ fontSize: 12, fontWeight: 600, color: "var(--dim)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 8 }}>Kostenlos</p>
               <p style={{ fontSize: 32, fontWeight: 700, letterSpacing: -1, marginBottom: 4 }}>0 €</p>
@@ -308,8 +308,7 @@ export default function Page() {
 
       {/* ═══════ FOOTER ═══════ */}
       <footer style={{ borderTop: "1px solid var(--line)", padding: "24px", textAlign: "center", fontSize: 12, color: "var(--dim)" }}>
-        <nav aria-label="Rechtliche Hinweise" style={{ display: "flex", justifyContent: "center", gap: 20, marginBottom: 10 }}>
-          {/* TODO: echte Routen anlegen sobald Impressum/Datenschutz/AGB existieren */}
+        <nav className="footer-nav" aria-label="Rechtliche Hinweise">
           <a href="/impressum" style={{ color: "inherit", textDecoration: "none" }}>Impressum</a>
           <a href="/datenschutz" style={{ color: "inherit", textDecoration: "none" }}>Datenschutz</a>
           <a href="/agb" style={{ color: "inherit", textDecoration: "none" }}>AGB</a>

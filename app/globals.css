@@ -80,3 +80,74 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────────
+ * Responsive Grid-Helper.
+ *
+ * Inline-styles haben hoehere Specificity als CSS-Klassen — daher
+ * koennen wir gridTemplateColumns NICHT inline setzen wenn wir hier
+ * per Media-Query draufschauen wollen. Komponenten muessen die
+ * Grid-Spalten ueber className kommen lassen, nicht ueber style.
+ *
+ * Mobile-First: Default = 1 Spalte; ab Breakpoint mehr.
+ * Breakpoints: 640px (Tablet-S), 768px (Tablet), 960px (Desktop-S).
+ * ───────────────────────────────────────────────────────────────── */
+
+.grid-cards { display: grid; gap: 16px; grid-template-columns: 1fr; }
+
+/* 3-Spalten ab Desktop (How-it-Works, Testimonials) */
+@media (min-width: 768px) {
+  .grid-cards--3 { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* 2-Spalten ab Tablet (Pricing) */
+@media (min-width: 640px) {
+  .grid-cards--2 { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Auto-fit fuer Klausel-Karten (Hub + Detail-Seite "verwandte") */
+.grid-clauses { display: grid; gap: 10px; grid-template-columns: 1fr; }
+@media (min-width: 560px) {
+  .grid-clauses { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+}
+
+/* Two-column simple fuer "Was wir pruefen" auf der Landing */
+.grid-clauses-pair { display: grid; gap: 8px; grid-template-columns: 1fr; }
+@media (min-width: 600px) {
+  .grid-clauses-pair { grid-template-columns: 1fr 1fr; }
+}
+
+/* Hero-Trust-Strip (3 Indikatoren) wrappt mobil sauber */
+.hero-trust-strip {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+  font-size: 12px;
+}
+@media (min-width: 640px) { .hero-trust-strip { gap: 20px; } }
+
+/* Footer-Nav wickelt mobile sauber */
+.footer-nav {
+  display: flex;
+  justify-content: center;
+  gap: 14px 20px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+/* Header-Padding mobile etwas knapper, vermeidet Quetschen des Buttons */
+.site-header {
+  padding: 12px 16px;
+}
+@media (min-width: 640px) { .site-header { padding: 14px 28px; } }
+
+/* Section-Inner-Padding fuer Seiten mit grossem Outer-padding */
+.section-pad-x {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+@media (min-width: 640px) {
+  .section-pad-x { padding-left: 24px; padding-right: 24px; }
+}

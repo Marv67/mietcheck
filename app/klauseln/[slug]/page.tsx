@@ -128,7 +128,7 @@ export default async function ClauseDetail({ params }: { params: Promise<RoutePa
       <JsonLd data={articleLd} id="ld-article" />
       <JsonLd data={breadcrumbLd} id="ld-breadcrumb" />
 
-      <header style={{ padding: "14px 28px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--line)", background: "rgba(248,247,244,.85)", backdropFilter: "blur(12px)", position: "sticky", top: 0, zIndex: 10 }}>
+      <header className="site-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--line)", background: "rgba(248,247,244,.85)", backdropFilter: "blur(12px)", position: "sticky", top: 0, zIndex: 10 }}>
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", color: "inherit" }} aria-label="Zur Startseite">
           <div style={{ width: 30, height: 30, borderRadius: 7, background: "var(--blue)", display: "grid", placeItems: "center" }} aria-hidden="true">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true" focusable="false">
@@ -243,7 +243,7 @@ export default async function ClauseDetail({ params }: { params: Promise<RoutePa
         {siblings.length > 0 && (
           <section style={{ maxWidth: 720, margin: "0 auto", padding: "0 24px 48px" }} aria-labelledby="h-related">
             <h2 id="h-related" style={{ fontFamily: "var(--font-serif), Georgia, serif", fontSize: 22, fontWeight: 400, marginBottom: 16 }}>Weitere Klauseln: {c.kategorie}</h2>
-            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 8 }}>
+            <ul className="grid-clauses" style={{ listStyle: "none", padding: 0, margin: 0 }}>
               {siblings.map((s) => {
                 const sl = statusLabel(s.status);
                 const t = TONE_STYLES[sl.tone];
@@ -288,7 +288,7 @@ export default async function ClauseDetail({ params }: { params: Promise<RoutePa
       </main>
 
       <footer style={{ borderTop: "1px solid var(--line)", padding: "24px", textAlign: "center", fontSize: 12, color: "var(--dim)" }}>
-        <nav aria-label="Rechtliche Hinweise" style={{ display: "flex", justifyContent: "center", gap: 20, marginBottom: 10 }}>
+        <nav className="footer-nav" aria-label="Rechtliche Hinweise">
           <Link href="/impressum" style={{ color: "inherit", textDecoration: "none" }}>Impressum</Link>
           <Link href="/datenschutz" style={{ color: "inherit", textDecoration: "none" }}>Datenschutz</Link>
           <Link href="/agb" style={{ color: "inherit", textDecoration: "none" }}>AGB</Link>

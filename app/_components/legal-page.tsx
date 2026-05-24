@@ -38,7 +38,7 @@ export default function LegalPageLayout({
         } as React.CSSProperties
       }
     >
-      <header style={{ padding: "14px 28px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--line)", background: "rgba(248,247,244,.85)", backdropFilter: "blur(12px)", position: "sticky", top: 0, zIndex: 10 }}>
+      <header className="site-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--line)", background: "rgba(248,247,244,.85)", backdropFilter: "blur(12px)", position: "sticky", top: 0, zIndex: 10 }}>
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", color: "inherit" }} aria-label="Zur Startseite">
           <div style={{ width: 30, height: 30, borderRadius: 7, background: "var(--blue)", display: "grid", placeItems: "center" }} aria-hidden="true">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true" focusable="false">
@@ -76,7 +76,7 @@ export default function LegalPageLayout({
       </main>
 
       <footer style={{ borderTop: "1px solid var(--line)", padding: "24px", textAlign: "center", fontSize: 12, color: "var(--dim)" }}>
-        <nav aria-label="Rechtliche Hinweise" style={{ display: "flex", justifyContent: "center", gap: 20, marginBottom: 10 }}>
+        <nav className="footer-nav" aria-label="Rechtliche Hinweise">
           <Link href="/impressum" style={{ color: "inherit", textDecoration: "none" }}>Impressum</Link>
           <Link href="/datenschutz" style={{ color: "inherit", textDecoration: "none" }}>Datenschutz</Link>
           <Link href="/agb" style={{ color: "inherit", textDecoration: "none" }}>AGB</Link>
