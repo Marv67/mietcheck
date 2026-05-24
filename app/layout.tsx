@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { JsonLd, organizationJsonLd, websiteJsonLd } from "./_lib/jsonld";
 
 /**
  * SEO-TODO: NEXT_PUBLIC_SITE_URL via Vercel-Env setzen, sobald die echte
@@ -74,7 +75,16 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="de">
-      <body>{children}</body>
+      <body>
+        {/*
+          Globale schema.org-Markups (Organization + WebSite) — werden
+          auf jeder Seite mitgeliefert. FAQPage wird nur dort eingebettet,
+          wo tatsaechlich FAQ-Content sichtbar ist (Landingpage).
+        */}
+        <JsonLd data={organizationJsonLd()} id="ld-org" />
+        <JsonLd data={websiteJsonLd()} id="ld-website" />
+        {children}
+      </body>
     </html>
   );
 }

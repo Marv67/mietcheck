@@ -24,6 +24,7 @@ import {
   TESTIMONIALS,
   FAQ_ITEMS,
 } from "./_lib/landing-data";
+import { JsonLd, faqPageJsonLd } from "./_lib/jsonld";
 
 /**
  * KEYWORD-TODO: title und description sind die wichtigsten
@@ -261,6 +262,13 @@ export default function Page() {
 
         {/* ═══════ FAQ ═══════ */}
         <section style={{ maxWidth: 580, margin: "0 auto", padding: "0 24px 64px" }} aria-labelledby="faq-heading">
+          {/*
+            FAQPage-JSON-LD direkt neben dem sichtbaren FAQ-Content.
+            Google-Forderung: strukturierte Daten muessen mit dem sichtbaren
+            Content uebereinstimmen. Bei Diskrepanz droht manuelle Massnahme
+            ("Spam: Misleading Structured Data").
+          */}
+          <JsonLd data={faqPageJsonLd(FAQ_ITEMS)} id="ld-faq" />
           <h2 id="faq-heading" style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontSize: 30, fontWeight: 400, textAlign: "center", marginBottom: 32 }}>
             Häufige Fragen
           </h2>
