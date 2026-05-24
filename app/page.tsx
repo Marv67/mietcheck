@@ -15,6 +15,7 @@
  */
 
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import UploadFlow from "./_components/upload-flow";
 import {
   LANDING_CLAUSES,
@@ -61,6 +62,7 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
+  const isPaid = cookies().get("mc_paid")?.value === "1";
   return (
     <div
       style={
@@ -134,7 +136,7 @@ export default function Page() {
           </p>
 
           {/* ───── UPLOAD (Client-Insel) ───── */}
-          <UploadFlow />
+          <UploadFlow isPaid={isPaid} />
 
           <div className="hero-trust-strip" style={{ color: "var(--dim)" }}>
             <span>🔒 Daten werden nicht gespeichert</span>

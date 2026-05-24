@@ -3,19 +3,24 @@
 /**
  * Client-Insel fuer den Upload-/Analyse-Flow.
  *
- * Rendert die Upload-Zone inline an der Stelle, an der die Komponente
- * eingebettet wird. Wenn der Nutzer eine Datei hochlaedt, wird ein
- * Fullscreen-Overlay (Loading -> Results) eingeblendet, ohne die
- * Server-rendered Landingpage zu zerstoeren.
+ * Paywall-Logik:
+ *  - isPaid=false (Default): Klausel-Header + Zitat sichtbar;
+ *    Erklaerung / Rechtsgrundlage / Handlungsempfehlung gelockt.
+ *  - isPaid=true (Cookie mc_paid=1 vom Server gesetzt):
+ *    Alle Details sichtbar.
  *
- * Wichtig fuer SEO: nur diese Komponente ist client-rendered. Alle
- * statischen Texte (Hero, How-it-Works, FAQ, Pricing, Footer) bleiben
- * im server-rendered HTML.
+ * Stripe-Flow:
+ *  1. handleCheckout() speichert Ergebnis in sessionStorage,
+ *     ruft POST /api/checkout auf, leitet zu Stripe weiter.
+ *  2. Nach Zahlung: Stripe → /api/payment-verify → setzt Cookie →
+ *     Redirect zu /?paid=1.
+ *  3. useEffect: isPaid=true + sessionStorage hat Daten → Ergebnis
+ *     wird automatisch wiederhergestellt.
  */
 
-import { useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
-/* ───────── ANALYSIS TYPES ───────── */
+/* ───────── TYPEN ───────── */
 type AnalysisStatus = "unwirksam" | "wirksam" | "unklar" | "nicht_gefunden";
 
 type AnalyzedClause = {
@@ -44,6 +49,11 @@ type AnalysisData = {
   meta: { model: string; mock: boolean; passes?: number; pass2_recovered?: number; input_chars: number };
 };
 
+type StoredAnalysis = AnalysisData & { filename: string; pages: number; chars: number };
+
+const STORAGE_KEY = "mc_analysis_v1";
+
+/* ───────── HILFSFUNKTIONEN ───────── */
 function iconForKategorie(kat?: string): string {
   if (!kat) return "📄";
   const k = kat.toLowerCase();
@@ -71,11 +81,27 @@ function Badge({ status }: { status: string }) {
   );
 }
 
-function ResultCard({ r, i }: { r: AnalyzedClause; i: number }) {
+/* ───────── RESULT CARD ───────── */
+function ResultCard({ r, i, isPaid }: { r: AnalyzedClause; i: number; isPaid: boolean }) {
   const [open, setOpen] = useState(false);
   const title = r.klausel_typ || r.kategorie || "Klausel";
+
+  const hasDetails = !!(r.erklaerung || r.rechtsfolge || r.handlungsempfehlung || r.rechtsgrundlage || r.leitentscheidungen?.length);
+
   return (
-    <div onClick={() => setOpen(!open)} style={{ background: "var(--card)", borderRadius: 12, border: "1px solid var(--line)", cursor: "pointer", transition: "box-shadow .15s", overflow: "hidden", animation: `fadeUp .45s ${i * 80}ms both` }}>
+    <div
+      onClick={() => setOpen(!open)}
+      style={{
+        background: "var(--card)",
+        borderRadius: 12,
+        border: "1px solid var(--line)",
+        cursor: "pointer",
+        transition: "box-shadow .15s",
+        overflow: "hidden",
+        animation: `fadeUp .45s ${i * 80}ms both`,
+      }}
+    >
+      {/* ─── Kartenheader (immer sichtbar) ─── */}
       <div style={{ padding: "16px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
           <span style={{ fontSize: 14, flexShrink: 0 }} aria-hidden="true">{iconForKategorie(r.kategorie)}</span>
@@ -86,43 +112,70 @@ function ResultCard({ r, i }: { r: AnalyzedClause; i: number }) {
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
           <Badge status={r.status} />
+          {!isPaid && hasDetails && (
+            <span style={{ fontSize: 10, color: "var(--dim)" }} aria-label="gesperrt">🔒</span>
+          )}
           <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false" style={{ transition: "transform .2s", transform: open ? "rotate(180deg)" : "" }}>
             <path d="M4 6l4 4 4-4" fill="none" stroke="var(--dim)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
       </div>
+
+      {/* ─── Aufgeklappter Bereich ─── */}
       {open && (
         <div style={{ padding: "0 20px 18px", borderTop: "1px solid var(--line)" }}>
+          {/* Zitat — immer sichtbar */}
           {r.zitat && (
             <div style={{ margin: "14px 0", padding: "10px 14px", background: "var(--bg)", borderLeft: "2.5px solid var(--blue)", borderRadius: "0 6px 6px 0" }}>
-              <p style={{ margin: 0, fontSize: 13, fontStyle: "italic", color: "var(--dim)", lineHeight: 1.65 }}>„{r.zitat}“</p>
+              <p style={{ margin: 0, fontSize: 13, fontStyle: "italic", color: "var(--dim)", lineHeight: 1.65 }}>„{r.zitat}"</p>
             </div>
           )}
-          {r.erklaerung && (
-            <p style={{ margin: "0 0 12px", fontSize: 13.5, lineHeight: 1.7, color: "var(--fg)" }}>{r.erklaerung}</p>
-          )}
-          {r.rechtsfolge && (
-            <div style={{ margin: "10px 0" }}>
-              <p style={{ fontSize: 11, fontWeight: 600, color: "var(--dim)", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 4 }}>Rechtsfolge</p>
-              <p style={{ fontSize: 13, lineHeight: 1.6, color: "var(--fg)" }}>{r.rechtsfolge}</p>
+
+          {/* Details — nur wenn bezahlt */}
+          {isPaid ? (
+            <>
+              {r.erklaerung && (
+                <p style={{ margin: "0 0 12px", fontSize: 13.5, lineHeight: 1.7, color: "var(--fg)" }}>{r.erklaerung}</p>
+              )}
+              {r.rechtsfolge && (
+                <div style={{ margin: "10px 0" }}>
+                  <p style={{ fontSize: 11, fontWeight: 600, color: "var(--dim)", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 4 }}>Rechtsfolge</p>
+                  <p style={{ fontSize: 13, lineHeight: 1.6, color: "var(--fg)" }}>{r.rechtsfolge}</p>
+                </div>
+              )}
+              {r.handlungsempfehlung && (
+                <div style={{ margin: "10px 0" }}>
+                  <p style={{ fontSize: 11, fontWeight: 600, color: "var(--dim)", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 4 }}>Handlungsempfehlung</p>
+                  <p style={{ fontSize: 13, lineHeight: 1.6, color: "var(--fg)" }}>{r.handlungsempfehlung}</p>
+                </div>
+              )}
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 12 }}>
+                {r.rechtsgrundlage && (
+                  <span style={{ fontSize: 11, fontFamily: "var(--mono)", color: "var(--blue)", background: "var(--blue-bg)", padding: "3px 8px", borderRadius: 5 }}>{r.rechtsgrundlage}</span>
+                )}
+                {r.leitentscheidungen?.map((l, idx) => (
+                  <span key={idx} style={{ fontSize: 11, fontFamily: "var(--mono)", color: "var(--blue)", background: "var(--blue-bg)", padding: "3px 8px", borderRadius: 5 }}>
+                    {l.gericht} {l.aktenzeichen}
+                  </span>
+                ))}
+              </div>
+            </>
+          ) : hasDetails ? (
+            /* Locked-Overlay */
+            <div style={{ position: "relative", borderRadius: 10, overflow: "hidden", marginTop: 4 }}>
+              {/* Unscharfer Dummy-Content */}
+              <div aria-hidden="true" style={{ filter: "blur(5px)", userSelect: "none", pointerEvents: "none", padding: "12px 14px", background: "var(--bg)", borderRadius: 10, fontSize: 13, lineHeight: 1.7, color: "var(--fg)" }}>
+                Die Klausel ist unwirksam, weil sie den Mieter unangemessen benachteiligt gemäß § 307 Abs. 1 BGB. Nach der Rechtsprechung des BGH (VIII ZR 394/12) ist eine solche Regelung ohne Ausnahme nichtig. Als Mieter können Sie die Rückzahlung schriftlich fordern und ggf. einen Mieterverein einschalten. Rechtsgrundlage: §§ 307, 536 BGB.
+              </div>
+              {/* Lock-Badge */}
+              <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 6, background: "rgba(248,247,244,.82)", backdropFilter: "blur(3px)" }}>
+                <span style={{ fontSize: 20 }}>🔒</span>
+                <span style={{ fontSize: 12, fontWeight: 600, color: "var(--dim)", textAlign: "center" }}>
+                  Erklärung, Rechtsgrundlage &amp; Empfehlung<br />nach dem Freischalten sichtbar
+                </span>
+              </div>
             </div>
-          )}
-          {r.handlungsempfehlung && (
-            <div style={{ margin: "10px 0" }}>
-              <p style={{ fontSize: 11, fontWeight: 600, color: "var(--dim)", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 4 }}>Handlungsempfehlung</p>
-              <p style={{ fontSize: 13, lineHeight: 1.6, color: "var(--fg)" }}>{r.handlungsempfehlung}</p>
-            </div>
-          )}
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 12 }}>
-            {r.rechtsgrundlage && (
-              <span style={{ fontSize: 11, fontFamily: "var(--mono)", color: "var(--blue)", background: "var(--blue-bg)", padding: "3px 8px", borderRadius: 5 }}>{r.rechtsgrundlage}</span>
-            )}
-            {r.leitentscheidungen?.map((l, idx) => (
-              <span key={idx} style={{ fontSize: 11, fontFamily: "var(--mono)", color: "var(--blue)", background: "var(--blue-bg)", padding: "3px 8px", borderRadius: 5 }}>
-                {l.gericht} {l.aktenzeichen}
-              </span>
-            ))}
-          </div>
+          ) : null}
         </div>
       )}
     </div>
@@ -139,7 +192,7 @@ function Stat({ value, label, color }: { value: string | number; label: string; 
 }
 
 /* ───────── MAIN COMPONENT ───────── */
-export default function UploadFlow() {
+export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
   const [view, setView] = useState<"idle" | "loading" | "results">("idle");
   const [file, setFile] = useState<File | null>(null);
   const [drag, setDrag] = useState(false);
@@ -149,8 +202,24 @@ export default function UploadFlow() {
   const [extracted, setExtracted] = useState<{ text: string; pages: number; chars: number } | null>(null);
   const [analysis, setAnalysis] = useState<AnalysisData | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
   const ref = useRef<HTMLInputElement>(null);
 
+  // ── Nach Rückkehr von Stripe: Ergebnis aus sessionStorage wiederherstellen ──
+  useEffect(() => {
+    if (!isPaid) return;
+    try {
+      const raw = sessionStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const stored: StoredAnalysis = JSON.parse(raw);
+      setFile({ name: stored.filename } as File);
+      setExtracted({ text: "", pages: stored.pages, chars: stored.chars });
+      setAnalysis({ klauseln: stored.klauseln, zusammenfassung: stored.zusammenfassung, meta: stored.meta });
+      setView("results");
+    } catch { /* sessionStorage-Fehler ignorieren */ }
+  }, [isPaid]);
+
+  /* ─── Upload + Analyse ─── */
   const analyze = async (f: File) => {
     setFile(f);
     setError(null);
@@ -190,7 +259,8 @@ export default function UploadFlow() {
     }
 
     const extractedText = extractData.text!;
-    setExtracted({ text: extractedText, pages: extractData.pages ?? 0, chars: extractData.chars ?? extractedText.length });
+    const extractedMeta = { text: extractedText, pages: extractData.pages ?? 0, chars: extractData.chars ?? extractedText.length };
+    setExtracted(extractedMeta);
 
     setProgress(48);
     setStep("Klauseln werden identifiziert …");
@@ -226,11 +296,23 @@ export default function UploadFlow() {
       return;
     }
 
-    setAnalysis({
+    const finalAnalysis: AnalysisData = {
       klauseln: analyzeData.klauseln,
       zusammenfassung: analyzeData.zusammenfassung,
       meta: analyzeData.meta!,
-    });
+    };
+    setAnalysis(finalAnalysis);
+
+    // Ergebnis in sessionStorage sichern (fuer Post-Payment-Wiederherstellung)
+    try {
+      const stored: StoredAnalysis = {
+        ...finalAnalysis,
+        filename: f.name,
+        pages: extractedMeta.pages,
+        chars: extractedMeta.chars,
+      };
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
+    } catch { /* sessionStorage nicht verfuegbar — ignorieren */ }
 
     setProgress(95);
     setStep("Report wird zusammengestellt …");
@@ -238,6 +320,28 @@ export default function UploadFlow() {
     setProgress(100);
     setStep("Analyse abgeschlossen");
     setTimeout(() => setView("results"), 400);
+  };
+
+  /* ─── Stripe Checkout starten ─── */
+  const handleCheckout = async () => {
+    setCheckoutLoading(true);
+    try {
+      const resp = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ returnTo: "/" }),
+      });
+      const data: { ok: boolean; url?: string; error?: string } = await resp.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        setError(data.error || "Checkout konnte nicht gestartet werden.");
+        setCheckoutLoading(false);
+      }
+    } catch {
+      setError("Verbindung zum Zahlungs-Server fehlgeschlagen.");
+      setCheckoutLoading(false);
+    }
   };
 
   const drop = (e: React.DragEvent) => {
@@ -254,6 +358,7 @@ export default function UploadFlow() {
     setError(null);
     setExtracted(null);
     setAnalysis(null);
+    try { sessionStorage.removeItem(STORAGE_KEY); } catch {}
   };
 
   const klauseln = analysis?.klauseln ?? [];
@@ -266,13 +371,10 @@ export default function UploadFlow() {
 
   return (
     <>
-      {/* ───── INLINE UPLOAD-ZONE (visible on landing) ───── */}
+      {/* ───── INLINE UPLOAD-ZONE ───── */}
       <div id="upload" style={{ scrollMarginTop: 80 }}>
         <div
-          onDragOver={(e) => {
-            e.preventDefault();
-            setDrag(true);
-          }}
+          onDragOver={(e) => { e.preventDefault(); setDrag(true); }}
           onDragLeave={() => setDrag(false)}
           onDrop={drop}
           onClick={() => ref.current?.click()}
@@ -280,10 +382,7 @@ export default function UploadFlow() {
           tabIndex={0}
           aria-label="Mietvertrag als PDF hochladen"
           onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              ref.current?.click();
-            }
+            if (e.key === "Enter" || e.key === " ") { e.preventDefault(); ref.current?.click(); }
           }}
           style={{
             maxWidth: 440,
@@ -311,7 +410,7 @@ export default function UploadFlow() {
             <strong style={{ fontWeight: 600 }}>Fehler:</strong> {error}
           </div>
         )}
-        {/* DSGVO-Hinweis: kurzer Satz + Link direkt unter Upload-Zone */}
+        {/* DSGVO-Hinweis */}
         <p style={{ maxWidth: 440, margin: "12px auto 0", fontSize: 11.5, color: "#8C8A82", textAlign: "center", lineHeight: 1.5 }}>
           🔒 Ihr Vertragstext wird ausschließlich zur Analyse verarbeitet und danach sofort
           gelöscht — keine dauerhafte Speicherung, keine Weitergabe.{" "}
@@ -322,21 +421,15 @@ export default function UploadFlow() {
         <input ref={ref} type="file" accept=".pdf" style={{ display: "none" }} onChange={(e) => e.target.files?.[0] && analyze(e.target.files[0])} />
       </div>
 
-      {/* ───── FULLSCREEN OVERLAY (Loading + Results) ───── */}
+      {/* ───── FULLSCREEN OVERLAY ───── */}
       {view !== "idle" && (
         <div
           role="dialog"
           aria-modal="true"
           aria-label={view === "loading" ? "Analyse läuft" : "Analyse-Ergebnis"}
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "var(--bg)",
-            zIndex: 100,
-            overflowY: "auto",
-            animation: "fadeUp .3s both",
-          }}
+          style={{ position: "fixed", inset: 0, background: "var(--bg)", zIndex: 100, overflowY: "auto", animation: "fadeUp .3s both" }}
         >
+          {/* ── Loading ── */}
           {view === "loading" && (
             <div style={{ padding: "140px 24px", maxWidth: 400, margin: "0 auto", textAlign: "center", animation: "fadeUp .4s both" }}>
               <div style={{ width: 72, height: 90, margin: "0 auto 28px", background: "var(--card)", border: "1px solid var(--line)", borderRadius: 10, position: "relative", overflow: "hidden" }}>
@@ -354,8 +447,9 @@ export default function UploadFlow() {
             </div>
           )}
 
+          {/* ── Ergebnisse ── */}
           {view === "results" && (
-            <div style={{ maxWidth: 680, margin: "0 auto", padding: "36px 24px 64px", animation: "fadeUp .5s both" }}>
+            <div style={{ maxWidth: 680, margin: "0 auto", padding: "36px 24px 120px", animation: "fadeUp .5s both" }}>
               <div style={{ textAlign: "center", marginBottom: 32 }}>
                 <h2 style={{ fontFamily: "var(--font-serif), Georgia, serif", fontSize: 30, fontWeight: 400, marginBottom: 4 }}>Analyse abgeschlossen</h2>
                 <p style={{ fontSize: 14, color: "var(--dim)" }}>
@@ -372,6 +466,7 @@ export default function UploadFlow() {
                 </div>
               )}
 
+              {/* Statistik-Kacheln */}
               <div style={{ background: "var(--card)", border: "1px solid var(--line)", borderRadius: 16, padding: "28px 32px", display: "flex", justifyContent: "space-around", marginBottom: 28 }}>
                 <Stat value={unwirksamCount} label="Unwirksam" color="#DC2626" />
                 <div style={{ width: 1, background: "var(--line)" }} />
@@ -393,32 +488,25 @@ export default function UploadFlow() {
                 </div>
               )}
 
+              {/* Filter-Buttons */}
               <div style={{ display: "flex", gap: 6, marginBottom: 16 }}>
-                {(
-                  [
-                    ["all", "Alle"],
-                    ["unwirksam", "Unwirksam"],
-                    ["wirksam", "Wirksam"],
-                    ["unklar", "Unklar"],
-                  ] as const
-                ).map(([k, l]) => (
+                {([ ["all", "Alle"], ["unwirksam", "Unwirksam"], ["wirksam", "Wirksam"], ["unklar", "Unklar"] ] as const).map(([k, l]) => (
                   <button key={k} onClick={() => setFilter(k)} style={{ padding: "6px 14px", borderRadius: 7, fontSize: 12, fontWeight: 550, border: "1px solid var(--line)", background: filter === k ? "var(--fg)" : "var(--card)", color: filter === k ? "var(--bg)" : "var(--dim)", cursor: "pointer", transition: "all .15s" }}>
                     {l}
                   </button>
                 ))}
               </div>
 
+              {/* Klausel-Karten */}
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 {filtered.map((r, i) => (
-                  <ResultCard key={`${r.id || "x"}-${i}`} r={r} i={i} />
+                  <ResultCard key={`${r.id || "x"}-${i}`} r={r} i={i} isPaid={isPaid} />
                 ))}
               </div>
 
+              {/* Neuer Vertrag */}
               <div style={{ textAlign: "center", marginTop: 24 }}>
-                <button
-                  onClick={reset}
-                  style={{ background: "none", border: "1px solid var(--line)", color: "var(--fg)", padding: "10px 28px", borderRadius: 8, fontSize: 13, fontWeight: 550, cursor: "pointer" }}
-                >
+                <button onClick={reset} style={{ background: "none", border: "1px solid var(--line)", color: "var(--fg)", padding: "10px 28px", borderRadius: 8, fontSize: 13, fontWeight: 550, cursor: "pointer" }}>
                   Neuen Vertrag prüfen
                 </button>
               </div>
@@ -426,6 +514,56 @@ export default function UploadFlow() {
               <p style={{ textAlign: "center", fontSize: 11, color: "var(--dim)", marginTop: 20, lineHeight: 1.5 }}>
                 ⚖️ Automatisierte Ersteinschätzung auf Basis öffentlicher Rechtsprechung · Keine Rechtsberatung i.S.d. RDG
               </p>
+            </div>
+          )}
+
+          {/* ───── PAYWALL-BANNER (sticky unten, nur wenn nicht bezahlt) ───── */}
+          {view === "results" && !isPaid && (
+            <div
+              style={{
+                position: "fixed",
+                bottom: 0,
+                left: 0,
+                right: 0,
+                zIndex: 110,
+                background: "rgba(28,27,25,.96)",
+                backdropFilter: "blur(16px)",
+                padding: "16px 24px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 16,
+                flexWrap: "wrap",
+                borderTop: "1px solid rgba(255,255,255,.1)",
+              }}
+            >
+              <div>
+                <p style={{ color: "#fff", fontSize: 14, fontWeight: 600, margin: 0, letterSpacing: -0.2 }}>
+                  🔒 Alle Details freischalten
+                </p>
+                <p style={{ color: "rgba(255,255,255,.55)", fontSize: 12, margin: "2px 0 0" }}>
+                  Erklärungen · Rechtsgrundlagen · BGH-Urteile · Handlungsempfehlungen
+                </p>
+              </div>
+              <button
+                onClick={handleCheckout}
+                disabled={checkoutLoading}
+                style={{
+                  background: checkoutLoading ? "#888" : "#2558D4",
+                  color: "#fff",
+                  border: "none",
+                  padding: "12px 28px",
+                  borderRadius: 10,
+                  fontSize: 15,
+                  fontWeight: 700,
+                  cursor: checkoutLoading ? "wait" : "pointer",
+                  letterSpacing: -0.3,
+                  whiteSpace: "nowrap",
+                  flexShrink: 0,
+                }}
+              >
+                {checkoutLoading ? "Weiterleitung …" : "Jetzt freischalten — 2,99 €"}
+              </button>
             </div>
           )}
         </div>
