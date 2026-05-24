@@ -125,9 +125,8 @@ export default function DatenschutzPage() {
               color: "#78350F",
             }}
           >
-            <strong style={{ color: "#92400E" }}>⚠️ Vor dem Live-Gang:</strong> Alle mit{" "}
-            <mark>gelb markierten Felder</mark> müssen durch echte Angaben ersetzt werden
-            (Name, Adresse, E-Mail des Verantwortlichen, Aufsichtsbehörde).
+            <strong style={{ color: "#92400E" }}>⚠️ Noch ausstehend:</strong>{" "}
+            <mark>E-Mail-Adresse</mark> für Datenschutzanfragen vor dem Live-Gang eintragen.
           </div>
 
           <div className="legal-prose">
@@ -139,13 +138,13 @@ export default function DatenschutzPage() {
               Sinne der DSGVO (Art. 4 Nr. 7) ist:
             </p>
             <p>
-              <mark>[FIRMENNAME ODER VOR- UND NACHNAME DES BETREIBERS]</mark><br />
-              <mark>[STRASSE HAUSNUMMER]</mark><br />
-              <mark>[PLZ ORT]</mark><br />
+              Marvin Kalkschmid<br />
+              Berliner Ring 57<br />
+              72076 Tübingen<br />
               Deutschland
             </p>
             <p>
-              E-Mail: <mark>[DATENSCHUTZ@EXAMPLE.COM]</mark>
+              E-Mail: <a href="mailto:[DATENSCHUTZ@EXAMPLE.COM]"><mark>[DATENSCHUTZ@EXAMPLE.COM]</mark></a>
             </p>
 
             {/* ── 2. Verarbeitungsübersicht ── */}
@@ -327,16 +326,16 @@ export default function DatenschutzPage() {
             <h2>8. Beschwerderecht bei der Aufsichtsbehörde</h2>
             <p>
               Sie haben das Recht, sich bei der zuständigen Datenschutz-Aufsichtsbehörde
-              zu beschweren (Art. 77 DSGVO). Die für unseren Sitz zuständige Behörde ist:
+              zu beschweren (Art. 77 DSGVO). Die für unseren Sitz (Baden-Württemberg)
+              zuständige Behörde ist:
             </p>
             <p>
-              <mark>[NAME DER ZUSTÄNDIGEN DATENSCHUTZ-AUFSICHTSBEHÖRDE DES BUNDESLANDES]</mark><br />
-              <mark>[ADRESSE DER BEHÖRDE]</mark>
-            </p>
-            <p>
-              Eine Übersicht aller deutschen Datenschutzbehörden:{" "}
-              <a href="https://www.datenschutzkonferenz-online.de/" target="_blank" rel="noopener noreferrer">
-                datenschutzkonferenz-online.de
+              <strong>Der Landesbeauftragte für den Datenschutz und die Informationsfreiheit
+              Baden-Württemberg</strong><br />
+              Lautenschlagerstraße 20<br />
+              70173 Stuttgart<br />
+              <a href="https://www.baden-wuerttemberg.datenschutz.de/" target="_blank" rel="noopener noreferrer">
+                www.baden-wuerttemberg.datenschutz.de
               </a>
             </p>
 

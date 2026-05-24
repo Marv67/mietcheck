@@ -120,14 +120,13 @@ export default function ImpressumPage() {
               color: "#78350F",
             }}
           >
-            <strong style={{ color: "#92400E" }}>⚠️ Vor dem Live-Gang:</strong> Alle mit{" "}
+            <strong style={{ color: "#92400E" }}>⚠️ Noch ausstehend:</strong> Die{" "}
             <mark
               style={{ background: "#FEF3C7", padding: "1px 4px", borderRadius: 3, fontStyle: "italic", color: "#92400E", fontWeight: 500 }}
             >
               gelb markierten Felder
             </mark>{" "}
-            durch echte Angaben ersetzen. Das Impressum ist gesetzlich verpflichtend und muss vor
-            dem öffentlichen Launch vollständig ausgefüllt sein.
+            (E-Mail + Umsatzsteuer-Wahl) vor dem Live-Gang ergänzen.
           </div>
 
           <div className="legal-prose">
@@ -135,25 +134,16 @@ export default function ImpressumPage() {
             {/* ── Anbieter ── */}
             <h2>Anbieter</h2>
             <p>
-              <mark>[FIRMENNAME ODER VOR- UND NACHNAME DES BETREIBERS]</mark><br />
-              <mark>[STRASSE HAUSNUMMER]</mark><br />
-              <mark>[PLZ ORT]</mark><br />
+              Marvin Kalkschmid<br />
+              Berliner Ring 57<br />
+              72076 Tübingen<br />
               Deutschland
-            </p>
-
-            {/* Nur bei juristischer Person: */}
-            <p style={{ fontSize: 13, color: "var(--dim)", fontStyle: "italic" }}>
-              (Bei GmbH / UG / AG ergänzen:)<br />
-              Handelsregister: <mark>[HRB NUMMER]</mark>, Amtsgericht <mark>[ORT]</mark><br />
-              Vertretungsberechtigte/r Geschäftsführer/in: <mark>[NAME]</mark>
             </p>
 
             {/* ── Kontakt ── */}
             <h2>Kontakt</h2>
             <p>
-              E-Mail: <a href="mailto:[KONTAKT@EXAMPLE.COM]"><mark>[KONTAKT@EXAMPLE.COM]</mark></a><br />
-              {/* Telefon ist optional, aber bei vorhandener Nummer anzugeben */}
-              Telefon: <mark>[+49 XXX XXXXXXXX]</mark> (optional, empfohlen)
+              E-Mail: <a href="mailto:[KONTAKT@EXAMPLE.COM]"><mark>[KONTAKT@EXAMPLE.COM]</mark></a>
             </p>
 
             {/* ── Umsatzsteuer ── */}
@@ -171,19 +161,12 @@ export default function ImpressumPage() {
               <mark>[DE XXXXXXXXX]</mark>
             </p>
 
-            {/* ── Wirtschafts-ID ── */}
-            <h2>Wirtschafts-Identifikationsnummer</h2>
-            <p>
-              Wirtschafts-Identifikationsnummer gemäß § 139c AO:{" "}
-              <mark>[DE XXXXXXXXXXXXXXX — falls bereits zugeteilt, sonst diesen Abschnitt entfernen]</mark>
-            </p>
-
             {/* ── Verantwortlicher für Inhalt ── */}
             <h2>Verantwortlich für den Inhalt (§ 18 Abs. 2 MStV)</h2>
             <p>
-              <mark>[VOR- UND NACHNAME]</mark><br />
-              <mark>[STRASSE HAUSNUMMER]</mark><br />
-              <mark>[PLZ ORT]</mark>
+              Marvin Kalkschmid<br />
+              Berliner Ring 57<br />
+              72076 Tübingen
             </p>
 
             {/* ── Streitbeilegung ── */}
