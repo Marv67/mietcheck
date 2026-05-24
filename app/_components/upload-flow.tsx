@@ -349,7 +349,7 @@ export default function UploadFlow() {
           {view === "results" && (
             <div style={{ maxWidth: 680, margin: "0 auto", padding: "36px 24px 64px", animation: "fadeUp .5s both" }}>
               <div style={{ textAlign: "center", marginBottom: 32 }}>
-                <h2 style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontSize: 30, fontWeight: 400, marginBottom: 4 }}>Analyse abgeschlossen</h2>
+                <h2 style={{ fontFamily: "var(--font-serif), Georgia, serif", fontSize: 30, fontWeight: 400, marginBottom: 4 }}>Analyse abgeschlossen</h2>
                 <p style={{ fontSize: 14, color: "var(--dim)" }}>
                   {file?.name || "Mietvertrag.pdf"}
                   {extracted && ` · ${extracted.pages} Seiten · ${extracted.chars.toLocaleString("de-DE")} Zeichen extrahiert`}

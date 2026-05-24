@@ -6,6 +6,13 @@
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /*
+     * font-family default. var(--font-sans) wird in app/layout.tsx via
+     * next/font/google bereitgestellt (DM Sans, self-hosted).
+     * Fallback-Stack matched die Default-Metrics moeglichst eng, um CLS
+     * waehrend Font-Swap nahe 0 zu halten.
+     */
+    font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
   body {
     @apply bg-ink-50 text-ink-900;

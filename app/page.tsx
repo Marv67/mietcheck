@@ -72,17 +72,17 @@ export default function Page() {
           "--line": "rgba(0,0,0,.07)",
           "--blue": "#2558D4",
           "--blue-bg": "rgba(37,88,212,.06)",
-          "--mono": "'JetBrains Mono',monospace",
+          // --mono mappt auf next/font CSS-Variable (siehe app/layout.tsx)
+          "--mono": "var(--font-mono), monospace",
           minHeight: "100vh",
           background: "var(--bg)",
           color: "var(--fg)",
-          fontFamily: "'DM Sans','Helvetica Neue',sans-serif",
+          // Body-Font wird ueber globals.css gesetzt (--font-sans).
+          // Hier keine font-family-Override -> erbt sauber von <html>.
           overflowX: "hidden",
         } as React.CSSProperties
       }
     >
-      {/* TODO Commit 4: ueber next/font durch self-hosted Fonts ersetzen */}
-      <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
       <style>{`
         @keyframes fadeUp { from { opacity:0; transform:translateY(14px) } to { opacity:1; transform:translateY(0) } }
         @keyframes scan { 0%,100% { transform:translateY(-100%) } 50% { transform:translateY(200%) } }
@@ -124,7 +124,7 @@ export default function Page() {
             "Mietvertrag kostenlos prüfen lassen". Bitte Search Console
             Daten konsultieren bevor du das hier anpasst.
           */}
-          <h1 style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontSize: "clamp(36px,5.5vw,54px)", fontWeight: 400, lineHeight: 1.12, letterSpacing: -0.5, marginBottom: 20 }}>
+          <h1 style={{ fontFamily: "var(--font-serif), Georgia, serif", fontSize: "clamp(36px,5.5vw,54px)", fontWeight: 400, lineHeight: 1.12, letterSpacing: -0.5, marginBottom: 20 }}>
             Dein Mietvertrag enthält
             <br />
             vermutlich <span style={{ fontStyle: "italic", color: "var(--blue)" }}>unwirksame Klauseln</span>
@@ -159,7 +159,7 @@ export default function Page() {
 
         {/* ═══════ HOW IT WORKS ═══════ */}
         <section style={{ maxWidth: 720, margin: "0 auto", padding: "0 24px 64px" }} aria-labelledby="howitworks-heading">
-          <h2 id="howitworks-heading" style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontSize: 30, fontWeight: 400, textAlign: "center", marginBottom: 40 }}>
+          <h2 id="howitworks-heading" style={{ fontFamily: "var(--font-serif), Georgia, serif", fontSize: 30, fontWeight: 400, textAlign: "center", marginBottom: 40 }}>
             So funktioniert&apos;s
           </h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16 }}>
@@ -175,7 +175,7 @@ export default function Page() {
 
         {/* ═══════ ALL CLAUSES ═══════ */}
         <section style={{ maxWidth: 720, margin: "0 auto", padding: "0 24px 64px" }} aria-labelledby="clauses-heading">
-          <h2 id="clauses-heading" style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontSize: 30, fontWeight: 400, textAlign: "center", marginBottom: 8 }}>
+          <h2 id="clauses-heading" style={{ fontFamily: "var(--font-serif), Georgia, serif", fontSize: 30, fontWeight: 400, textAlign: "center", marginBottom: 8 }}>
             Was wir prüfen
           </h2>
           <p style={{ textAlign: "center", color: "var(--dim)", fontSize: 15, marginBottom: 36 }}>
@@ -206,7 +206,7 @@ export default function Page() {
 
         {/* ═══════ SOCIAL PROOF ═══════ */}
         <section style={{ maxWidth: 720, margin: "0 auto", padding: "0 24px 64px" }} aria-labelledby="testimonials-heading">
-          <h2 id="testimonials-heading" style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontSize: 30, fontWeight: 400, textAlign: "center", marginBottom: 36 }}>
+          <h2 id="testimonials-heading" style={{ fontFamily: "var(--font-serif), Georgia, serif", fontSize: 30, fontWeight: 400, textAlign: "center", marginBottom: 36 }}>
             Das sagen unsere Nutzer
           </h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 14 }}>
@@ -230,7 +230,7 @@ export default function Page() {
 
         {/* ═══════ PRICING ═══════ */}
         <section style={{ maxWidth: 580, margin: "0 auto", padding: "0 24px 64px" }} aria-labelledby="pricing-heading">
-          <h2 id="pricing-heading" style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontSize: 30, fontWeight: 400, textAlign: "center", marginBottom: 36 }}>
+          <h2 id="pricing-heading" style={{ fontFamily: "var(--font-serif), Georgia, serif", fontSize: 30, fontWeight: 400, textAlign: "center", marginBottom: 36 }}>
             Einfache Preise
           </h2>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
@@ -269,7 +269,7 @@ export default function Page() {
             ("Spam: Misleading Structured Data").
           */}
           <JsonLd data={faqPageJsonLd(FAQ_ITEMS)} id="ld-faq" />
-          <h2 id="faq-heading" style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontSize: 30, fontWeight: 400, textAlign: "center", marginBottom: 32 }}>
+          <h2 id="faq-heading" style={{ fontFamily: "var(--font-serif), Georgia, serif", fontSize: 30, fontWeight: 400, textAlign: "center", marginBottom: 32 }}>
             Häufige Fragen
           </h2>
           {FAQ_ITEMS.map((item, i) => (
@@ -287,7 +287,7 @@ export default function Page() {
         {/* ═══════ CTA ═══════ */}
         <section style={{ maxWidth: 660, margin: "0 auto", padding: "0 24px 48px", textAlign: "center" }}>
           <div style={{ background: "var(--card)", border: "1px solid var(--line)", borderRadius: 18, padding: "48px 32px" }}>
-            <h2 style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontSize: 28, fontWeight: 400, marginBottom: 12 }}>
+            <h2 style={{ fontFamily: "var(--font-serif), Georgia, serif", fontSize: 28, fontWeight: 400, marginBottom: 12 }}>
               Bereit, deinen Vertrag zu prüfen?
             </h2>
             <p style={{ color: "var(--dim)", fontSize: 15, marginBottom: 28 }}>Kostenlos starten — kein Account nötig.</p>

@@ -1,6 +1,48 @@
 import type { Metadata, Viewport } from "next";
+import { DM_Sans, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { JsonLd, organizationJsonLd, websiteJsonLd } from "./_lib/jsonld";
+
+/*
+ * next/font/google self-hostet die Fonts ueber Next.js (kein Request
+ * an fonts.googleapis.com im Browser). Vorteile gegenueber externem
+ * <link> zu Google Fonts:
+ *  - Kein Render-Blocking durch DNS/SSL zu fonts.googleapis.com
+ *  - Subsetting auf 'latin' reduziert Byte-Volumen um ~70%
+ *  - display: swap verhindert FOIT (Flash of Invisible Text)
+ *  - automatisches font-size-adjust gegen CLS waehrend Font-Swap
+ *  - keine Cookie-/Datenschutzthematik mit Google
+ *
+ * SEO-/CWV-Wirkung:
+ *  - LCP sinkt um typisch 200-400ms (Hero-Text rendert sofort mit
+ *    optimierter Fallback-Schrift, dann kommt die echte Schrift dazu)
+ *  - CLS sinkt nahe 0 (size-adjust matched Fallback-Metrics)
+ */
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+// Instrument Serif ist die Hero-Display-Schrift -> preload=true,
+// damit sie noch waehrend dem initialen HTTP-Response geladen wird.
+// Italic-Variante separat geladen weil im Hero verwendet
+// (<span style={{ fontStyle: 'italic' }}>unwirksame Klauseln</span>).
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+  variable: "--font-serif",
+  display: "swap",
+  preload: true,
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+});
 
 /**
  * SEO-TODO: NEXT_PUBLIC_SITE_URL via Vercel-Env setzen, sobald die echte
@@ -73,8 +115,9 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const fontClasses = [dmSans.variable, instrumentSerif.variable, jetbrainsMono.variable].join(" ");
   return (
-    <html lang="de">
+    <html lang="de" className={fontClasses}>
       <body>
         {/*
           Globale schema.org-Markups (Organization + WebSite) — werden
