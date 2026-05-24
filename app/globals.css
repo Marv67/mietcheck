@@ -151,3 +151,23 @@
 @media (min-width: 640px) {
   .section-pad-x { padding-left: 24px; padding-right: 24px; }
 }
+
+/* ─────────────────────────────────────────────────────────────────
+ * Legal-Prose — wird auf Datenschutz, Impressum, AGB verwendet.
+ * CSS-Variablen werden vom jeweiligen Page-Wrapper gesetzt.
+ * ───────────────────────────────────────────────────────────────── */
+.legal-prose { font-size: 15px; line-height: 1.75; color: var(--fg, #1C1B19); }
+.legal-prose h2 { font-family: var(--font-serif), Georgia, serif; font-size: 22px; font-weight: 400; margin: 40px 0 10px; border-bottom: 1px solid var(--line, rgba(0,0,0,.07)); padding-bottom: 8px; }
+.legal-prose h3 { font-size: 15px; font-weight: 600; margin: 24px 0 8px; color: var(--fg, #1C1B19); }
+.legal-prose p { margin: 0 0 14px; }
+.legal-prose ul, .legal-prose ol { margin: 0 0 14px; padding-left: 22px; }
+.legal-prose li { margin-bottom: 6px; }
+.legal-prose table { width: 100%; border-collapse: collapse; margin: 14px 0 20px; font-size: 14px; }
+.legal-prose th, .legal-prose td { border: 1px solid rgba(0,0,0,.1); padding: 10px 14px; text-align: left; vertical-align: top; }
+.legal-prose th { background: rgba(0,0,0,.03); font-weight: 600; }
+.legal-prose a { color: var(--blue, #2558D4); word-break: break-all; }
+.legal-prose mark { background: #FEF3C7; padding: 1px 4px; border-radius: 3px; font-style: italic; color: #92400E; font-weight: 500; }
+.legal-prose strong { font-weight: 600; }
+.legal-prose .notice-box { background: var(--blue-bg, rgba(37,88,212,.06)); border: 1px solid rgba(37,88,212,.15); border-radius: 10px; padding: 14px 18px; margin: 20px 0; font-size: 14px; }
+.legal-prose .warn-box { background: #FEF3C7; border: 1px solid #FDE68A; border-radius: 10px; padding: 14px 18px; margin: 20px 0; font-size: 14px; color: #78350F; }
+.legal-prose .warn-box strong { color: #92400E; }

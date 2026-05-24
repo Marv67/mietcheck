@@ -12,7 +12,9 @@ type ExtractResult = {
   pages: number;
   chars: number;
   text: string;
-  info?: Record<string, unknown>;
+  // `info` (PDF-Metadaten wie Autor, Creator etc.) wird bewusst nicht
+  // zurueckgegeben: es kann personenbezogene Daten enthalten und wird
+  // vom Frontend nicht benoetigt. DSGVO-Datensparsamkeit (Art. 5 Abs. 1 lit. c).
 };
 
 type ExtractError = {
@@ -62,8 +64,11 @@ export async function POST(req: NextRequest): Promise<NextResponse<ExtractResult
 
   const parser = new PDFParse({ data });
   try {
-    // Sequenziell, weil pdf-parse den Uint8Array beim ersten Aufruf in den Worker transferiert.
-    const infoResult = await parser.getInfo();
+    // Nur getText() — getInfo() wird bewusst weggelassen.
+    // PDF-Metadaten (Autor, Creator, Subject etc.) koennen personenbezogene
+    // Daten enthalten und werden vom Frontend nicht benoetigt.
+    // DSGVO-Datensparsamkeit (Art. 5 Abs. 1 lit. c).
+    // PasswordException wird auch von getText() geworfen.
     const textResult = await parser.getText();
     const text = (textResult.text || "").trim();
 
@@ -86,7 +91,6 @@ export async function POST(req: NextRequest): Promise<NextResponse<ExtractResult
       pages: textResult.total ?? textResult.pages.length,
       chars: text.length,
       text,
-      info: (infoResult.info as Record<string, unknown>) ?? undefined,
     });
   } catch (err) {
     if (err instanceof PasswordException) {

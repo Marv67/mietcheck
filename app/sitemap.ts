@@ -88,10 +88,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...mietminderungEntries,
     ...mpbEntries,
     ...musterEntries,
-    // SEO-TODO: Sobald Impressum/Datenschutz/AGB/Kontakt finale Inhalte
-    // haben (statt aktuell noindex-Stubs), hier wieder aufnehmen mit
-    // priority 0.3. Solange die Stubs noindex sind, sie BEWUSST nicht
-    // in der Sitemap listen — Sitemap signalisiert sonst "indexiere
-    // mich" und widerspricht dem noindex auf der Page selbst.
+    // Impressum + Datenschutz haben jetzt substanziellen Inhalt und sind
+    // indexierbar. AGB + Kontakt bleiben Stubs (noindex) bis zum Live-Gang.
+    {
+      url: `${SITE_URL}/impressum`,
+      lastModified: now,
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
+    {
+      url: `${SITE_URL}/datenschutz`,
+      lastModified: now,
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
   ];
 }

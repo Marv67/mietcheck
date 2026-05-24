@@ -311,6 +311,14 @@ export default function UploadFlow() {
             <strong style={{ fontWeight: 600 }}>Fehler:</strong> {error}
           </div>
         )}
+        {/* DSGVO-Hinweis: kurzer Satz + Link direkt unter Upload-Zone */}
+        <p style={{ maxWidth: 440, margin: "12px auto 0", fontSize: 11.5, color: "#8C8A82", textAlign: "center", lineHeight: 1.5 }}>
+          🔒 Ihr Vertragstext wird ausschließlich zur Analyse verarbeitet und danach sofort
+          gelöscht — keine dauerhafte Speicherung, keine Weitergabe.{" "}
+          <a href="/datenschutz" style={{ color: "#2558D4", textDecoration: "underline" }}>
+            Datenschutzerklärung
+          </a>
+        </p>
         <input ref={ref} type="file" accept=".pdf" style={{ display: "none" }} onChange={(e) => e.target.files?.[0] && analyze(e.target.files[0])} />
       </div>
 
