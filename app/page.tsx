@@ -110,7 +110,7 @@ export default function Page() {
         </a>
       </header>
 
-      <main>
+      <main id="main-content">
         {/* ═══════ HERO ═══════ */}
         <section style={{ maxWidth: 660, margin: "0 auto", padding: "72px 24px 56px", textAlign: "center" }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "var(--card)", border: "1px solid var(--line)", borderRadius: 20, padding: "5px 14px 5px 8px", fontSize: 12, fontWeight: 500, color: "var(--dim)", marginBottom: 24 }}>
@@ -145,16 +145,21 @@ export default function Page() {
 
         {/* ═══════ TRUST LOGOS ═══════ */}
         <section style={{ maxWidth: 600, margin: "0 auto", padding: "0 24px 48px", textAlign: "center" }} aria-labelledby="trust-heading">
+          {/*
+            Bewusst <p> statt <h2>: Caption fuer die Trust-Logos,
+            kein eigenes Hierarchie-Heading. aria-labelledby auf der
+            <section> akzeptiert jedes Element mit id.
+          */}
           <p id="trust-heading" style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 1.5, color: "var(--dim)", marginBottom: 16, fontWeight: 500 }}>
             Analyse basiert auf
           </p>
-          <div style={{ display: "flex", justifyContent: "center", gap: 32, alignItems: "center", flexWrap: "wrap", opacity: 0.45 }}>
+          <ul style={{ display: "flex", justifyContent: "center", gap: 32, alignItems: "center", flexWrap: "wrap", opacity: 0.45, listStyle: "none", padding: 0, margin: 0 }}>
             {["Bundesgerichtshof", "Bürgerliches Gesetzbuch", "Deutscher Mieterbund", "Aktuelle Rechtsprechung 2025/26"].map((t) => (
-              <span key={t} style={{ fontSize: 13, fontWeight: 600, letterSpacing: -0.2 }}>
+              <li key={t} style={{ fontSize: 13, fontWeight: 600, letterSpacing: -0.2 }}>
                 {t}
-              </span>
+              </li>
             ))}
-          </div>
+          </ul>
         </section>
 
         {/* ═══════ HOW IT WORKS ═══════ */}

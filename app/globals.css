@@ -39,3 +39,44 @@
     @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
   }
 }
+
+/*
+ * Skip-to-Content-Link — versteckt bis Keyboard-Focus.
+ * Best-Practice fuer Tastatur-/Screen-Reader-Nutzer, indirekt
+ * Page-Experience-Signal fuer Google.
+ */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 12px;
+  z-index: 999;
+  background: #1C1B19;
+  color: #F8F7F4;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.skip-link:focus {
+  left: 12px;
+  outline: 2px solid #2558D4;
+  outline-offset: 2px;
+}
+
+/*
+ * Respektiert OS-Setting "Bewegungen reduzieren" (macOS, iOS, Windows).
+ * Setzt alle Animationen auf praktisch null — wichtig fuer Nutzer mit
+ * Vestibulaerstoerungen, Migraene-Empfindlichkeit. Page-Experience-
+ * Signal nach WCAG 2.3.3.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

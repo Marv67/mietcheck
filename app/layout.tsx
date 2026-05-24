@@ -120,6 +120,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="de" className={fontClasses}>
       <body>
         {/*
+          Skip-to-Content — versteckt bis Keyboard-Focus.
+          Tastatur-User koennen das Menue ueberspringen und direkt
+          zum Hauptinhalt springen.
+        */}
+        <a href="#main-content" className="skip-link">Zum Hauptinhalt springen</a>
+
+        {/*
           Globale schema.org-Markups (Organization + WebSite) — werden
           auf jeder Seite mitgeliefert. FAQPage wird nur dort eingebettet,
           wo tatsaechlich FAQ-Content sichtbar ist (Landingpage).
