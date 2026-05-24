@@ -14,6 +14,7 @@
  * der Zielgruppe abgleichen und ggf. anpassen.
  */
 
+import type { Metadata } from "next";
 import UploadFlow from "./_components/upload-flow";
 import {
   LANDING_CLAUSES,
@@ -23,6 +24,40 @@ import {
   TESTIMONIALS,
   FAQ_ITEMS,
 } from "./_lib/landing-data";
+
+/**
+ * KEYWORD-TODO: title und description sind die wichtigsten
+ * Ranking-/CTR-Hebel der Landingpage. Die Werte hier sind ein erster
+ * Vorschlag basierend auf dem Markenversprechen — bitte gegen tatsaechliche
+ * Suchanfragen (Google Search Console, Sistrix, Ahrefs) abgleichen und
+ * gegebenenfalls auf Conversion-optimierte Varianten aendern.
+ *
+ * Faustregeln:
+ *  - title <= 60 Zeichen, primaeres Keyword ZUERST, Marke ans Ende
+ *  - description 140-160 Zeichen, mit klarem Nutzenversprechen + CTA-Wort
+ */
+export const metadata: Metadata = {
+  title: "Mietvertrag prüfen – unwirksame Klauseln finden | MietCheck",
+  description:
+    "Lade deinen Mietvertrag hoch und finde in 30 Sekunden unwirksame Klauseln – auf Basis aktueller BGH-Rechtsprechung. Kostenlose Ersteinschätzung, keine Anmeldung.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: "Mietvertrag prüfen – unwirksame Klauseln finden",
+    description:
+      "90 % aller Mietverträge enthalten ungültige Regelungen. Lade deinen Vertrag hoch — in 30 Sekunden weißt du, welche.",
+    url: "/",
+    type: "website",
+    // Next.js mergt openGraph nicht — Felder aus layout.tsx muessen
+    // hier wiederholt werden, sonst fallen sie raus.
+    locale: "de_DE",
+    siteName: "MietCheck",
+  },
+  twitter: {
+    title: "Mietvertrag prüfen – unwirksame Klauseln finden",
+    description:
+      "90 % aller Mietverträge enthalten ungültige Regelungen. In 30 Sekunden weißt du, welche.",
+  },
+};
 
 export default function Page() {
   return (
