@@ -64,11 +64,11 @@ export async function POST(req: NextRequest): Promise<NextResponse<ExtractResult
 
   const parser = new PDFParse({ data });
   try {
-    // Nur getText() — getInfo() wird bewusst weggelassen.
-    // PDF-Metadaten (Autor, Creator, Subject etc.) koennen personenbezogene
-    // Daten enthalten und werden vom Frontend nicht benoetigt.
-    // DSGVO-Datensparsamkeit (Art. 5 Abs. 1 lit. c).
-    // PasswordException wird auch von getText() geworfen.
+    // getInfo() initialisiert den PDF-Worker und transferiert den Uint8Array —
+    // muss vor getText() aufgerufen werden. Rueckgabewert (Metadaten wie Autor,
+    // Creator etc.) wird bewusst NICHT weitergegeben — DSGVO-Datensparsamkeit
+    // (Art. 5 Abs. 1 lit. c).
+    await parser.getInfo();
     const textResult = await parser.getText();
     const text = (textResult.text || "").trim();
 

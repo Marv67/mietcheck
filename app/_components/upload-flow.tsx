@@ -194,6 +194,8 @@ function Stat({ value, label, color }: { value: string | number; label: string; 
 /* ───────── MAIN COMPONENT ───────── */
 export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
   const [view, setView] = useState<"idle" | "loading" | "results">("idle");
+  const [inputMode, setInputMode] = useState<"pdf" | "text">("pdf");
+  const [manualText, setManualText] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [drag, setDrag] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -351,6 +353,76 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
     if (f) analyze(f);
   };
 
+  /* ─── Direkt-Text-Analyse (überspringt /api/extract) ─── */
+  const analyzeText = async () => {
+    const text = manualText.trim();
+    if (text.length < 50) {
+      setError("Bitte mindestens 50 Zeichen Vertragstext eingeben.");
+      return;
+    }
+    setFile({ name: "Manuell eingegeben" } as File);
+    setError(null);
+    setExtracted(null);
+    setAnalysis(null);
+    setView("loading");
+    setProgress(30);
+    setStep("Text wird analysiert …");
+
+    const extractedMeta = { text, pages: 1, chars: text.length };
+    setExtracted(extractedMeta);
+
+    let analyzeResp: Response;
+    try {
+      setProgress(50);
+      setStep("Klauseln werden identifiziert …");
+      analyzeResp = await fetch("/api/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Verbindung zum Analyse-Server fehlgeschlagen.");
+      setView("idle");
+      return;
+    }
+
+    setProgress(75);
+    setStep("Prüfung gegen BGH-Rechtsprechung …");
+
+    let analyzeData: { ok: boolean; error?: string } & Partial<AnalysisData>;
+    try {
+      analyzeData = await analyzeResp.json();
+    } catch {
+      setError(`Unerwartete Server-Antwort (HTTP ${analyzeResp.status}).`);
+      setView("idle");
+      return;
+    }
+
+    if (!analyzeResp.ok || !analyzeData.ok || !analyzeData.klauseln || !analyzeData.zusammenfassung) {
+      setError(analyzeData.error || `Analyse fehlgeschlagen (HTTP ${analyzeResp.status}).`);
+      setView("idle");
+      return;
+    }
+
+    const finalAnalysis: AnalysisData = {
+      klauseln: analyzeData.klauseln,
+      zusammenfassung: analyzeData.zusammenfassung,
+      meta: analyzeData.meta!,
+    };
+    setAnalysis(finalAnalysis);
+
+    try {
+      const stored: StoredAnalysis = { ...finalAnalysis, filename: "Manuell eingegeben", pages: 1, chars: text.length };
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
+    } catch {}
+
+    setProgress(95);
+    setStep("Report wird zusammengestellt …");
+    await new Promise((r) => setTimeout(r, 300));
+    setProgress(100);
+    setTimeout(() => setView("results"), 400);
+  };
+
   const reset = () => {
     setView("idle");
     setFile(null);
@@ -358,6 +430,7 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
     setError(null);
     setExtracted(null);
     setAnalysis(null);
+    setManualText("");
     try { sessionStorage.removeItem(STORAGE_KEY); } catch {}
   };
 
@@ -372,46 +445,124 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
   return (
     <>
       {/* ───── INLINE UPLOAD-ZONE ───── */}
-      <div id="upload" style={{ scrollMarginTop: 80 }}>
-        <div
-          onDragOver={(e) => { e.preventDefault(); setDrag(true); }}
-          onDragLeave={() => setDrag(false)}
-          onDrop={drop}
-          onClick={() => ref.current?.click()}
-          role="button"
-          tabIndex={0}
-          aria-label="Mietvertrag als PDF hochladen"
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") { e.preventDefault(); ref.current?.click(); }
-          }}
-          style={{
-            maxWidth: 440,
-            margin: "0 auto",
-            border: `2px dashed ${drag ? "var(--blue)" : "rgba(0,0,0,.12)"}`,
-            borderRadius: 16,
-            padding: "44px 28px 38px",
-            background: drag ? "var(--blue-bg)" : "var(--card)",
-            cursor: "pointer",
-            transition: "all .2s",
-          }}
-        >
-          <div style={{ width: 52, height: 52, borderRadius: 12, background: "var(--blue-bg)", display: "grid", placeItems: "center", margin: "0 auto 14px" }}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" strokeWidth="2" strokeLinecap="round" aria-hidden="true" focusable="false">
-              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
-              <polyline points="17 8 12 3 7 8" />
-              <line x1="12" y1="3" x2="12" y2="15" />
-            </svg>
-          </div>
-          <p style={{ fontWeight: 600, fontSize: 15, marginBottom: 4 }}>Mietvertrag als PDF hochladen</p>
-          <p style={{ fontSize: 13, color: "var(--dim)" }}>Drag &amp; Drop oder klicken zum Auswählen</p>
+      <div id="upload" style={{ scrollMarginTop: 80, maxWidth: 480, margin: "0 auto" }}>
+
+        {/* Tab-Toggle */}
+        <div style={{ display: "flex", gap: 4, marginBottom: 16, background: "rgba(0,0,0,.05)", borderRadius: 10, padding: 4 }}>
+          {(["pdf", "text"] as const).map((mode) => (
+            <button
+              key={mode}
+              onClick={() => { setInputMode(mode); setError(null); }}
+              style={{
+                flex: 1,
+                padding: "8px 0",
+                borderRadius: 7,
+                border: "none",
+                fontSize: 13,
+                fontWeight: 600,
+                cursor: "pointer",
+                transition: "all .15s",
+                background: inputMode === mode ? "var(--card)" : "transparent",
+                color: inputMode === mode ? "var(--fg)" : "var(--dim)",
+                boxShadow: inputMode === mode ? "0 1px 4px rgba(0,0,0,.08)" : "none",
+              }}
+            >
+              {mode === "pdf" ? "📄 PDF hochladen" : "✏️ Text einfügen"}
+            </button>
+          ))}
         </div>
+
+        {/* PDF-Zone */}
+        {inputMode === "pdf" && (
+          <div
+            onDragOver={(e) => { e.preventDefault(); setDrag(true); }}
+            onDragLeave={() => setDrag(false)}
+            onDrop={drop}
+            onClick={() => ref.current?.click()}
+            role="button"
+            tabIndex={0}
+            aria-label="Mietvertrag als PDF hochladen"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") { e.preventDefault(); ref.current?.click(); }
+            }}
+            style={{
+              border: `2px dashed ${drag ? "var(--blue)" : "rgba(0,0,0,.12)"}`,
+              borderRadius: 16,
+              padding: "44px 28px 38px",
+              background: drag ? "var(--blue-bg)" : "var(--card)",
+              cursor: "pointer",
+              transition: "all .2s",
+              textAlign: "center",
+            }}
+          >
+            <div style={{ width: 52, height: 52, borderRadius: 12, background: "var(--blue-bg)", display: "grid", placeItems: "center", margin: "0 auto 14px" }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" strokeWidth="2" strokeLinecap="round" aria-hidden="true" focusable="false">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" y1="3" x2="12" y2="15" />
+              </svg>
+            </div>
+            <p style={{ fontWeight: 600, fontSize: 15, marginBottom: 4 }}>Mietvertrag als PDF hochladen</p>
+            <p style={{ fontSize: 13, color: "var(--dim)" }}>Drag &amp; Drop oder klicken zum Auswählen</p>
+          </div>
+        )}
+
+        {/* Text-Zone */}
+        {inputMode === "text" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <textarea
+              value={manualText}
+              onChange={(e) => setManualText(e.target.value)}
+              placeholder="Vertragstext hier einfügen — z. B. kopiert aus Word oder einem Scan-Tool …"
+              rows={10}
+              style={{
+                width: "100%",
+                padding: "14px 16px",
+                fontSize: 14,
+                lineHeight: 1.6,
+                border: "1px solid var(--line)",
+                borderRadius: 12,
+                background: "var(--card)",
+                color: "var(--fg)",
+                fontFamily: "inherit",
+                resize: "vertical",
+                boxSizing: "border-box",
+              }}
+            />
+            <p style={{ fontSize: 12, color: "var(--dim)", margin: 0 }}>
+              {manualText.length} Zeichen
+              {manualText.length > 0 && manualText.length < 50 && (
+                <span style={{ color: "#B91C1C" }}> — mindestens 50 benötigt</span>
+              )}
+            </p>
+            <button
+              onClick={analyzeText}
+              disabled={manualText.trim().length < 50}
+              style={{
+                background: manualText.trim().length >= 50 ? "var(--fg)" : "rgba(0,0,0,.12)",
+                color: manualText.trim().length >= 50 ? "var(--bg)" : "var(--dim)",
+                border: "none",
+                padding: "13px 0",
+                borderRadius: 10,
+                fontSize: 15,
+                fontWeight: 600,
+                cursor: manualText.trim().length >= 50 ? "pointer" : "not-allowed",
+                transition: "all .15s",
+              }}
+            >
+              Vertrag jetzt prüfen →
+            </button>
+          </div>
+        )}
+
         {error && (
-          <div role="alert" style={{ maxWidth: 440, margin: "14px auto 0", background: "#FEF2F2", border: "1px solid #FECACA", color: "#B91C1C", borderRadius: 10, padding: "10px 14px", fontSize: 13, lineHeight: 1.5, textAlign: "left" }}>
+          <div role="alert" style={{ margin: "14px 0 0", background: "#FEF2F2", border: "1px solid #FECACA", color: "#B91C1C", borderRadius: 10, padding: "10px 14px", fontSize: 13, lineHeight: 1.5 }}>
             <strong style={{ fontWeight: 600 }}>Fehler:</strong> {error}
           </div>
         )}
+
         {/* DSGVO-Hinweis */}
-        <p style={{ maxWidth: 440, margin: "12px auto 0", fontSize: 11.5, color: "#8C8A82", textAlign: "center", lineHeight: 1.5 }}>
+        <p style={{ margin: "12px 0 0", fontSize: 11.5, color: "#8C8A82", textAlign: "center", lineHeight: 1.5 }}>
           🔒 Ihr Vertragstext wird ausschließlich zur Analyse verarbeitet und danach sofort
           gelöscht — keine dauerhafte Speicherung, keine Weitergabe.{" "}
           <a href="/datenschutz" style={{ color: "#2558D4", textDecoration: "underline" }}>
