@@ -1,7 +1,7 @@
 /**
  * POST /api/checkout
  *
- * Erstellt eine Stripe-Checkout-Session fuer die MietCheck-Vollanalyse
+ * Erstellt eine Stripe-Checkout-Session fuer die Klare-Miete-Vollanalyse
  * (2,99 EUR, Einmalzahlung). Gibt { url } zurueck; der Client leitet
  * den Browser dorthin weiter.
  *
@@ -64,7 +64,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             currency: "eur",
             unit_amount: PRICE_CENTS,
             product_data: {
-              name: "MietCheck – Vollanalyse",
+              name: "Klare Miete – Vollanalyse",
               description:
                 "Vollständige Klauselprüfung mit Erklärungen, Rechtsgrundlagen (BGH-Urteile) und konkreten Handlungsempfehlungen.",
             },

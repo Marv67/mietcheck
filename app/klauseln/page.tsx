@@ -1,5 +1,5 @@
 /**
- * /klauseln — Uebersicht aller 260 Klauseln aus der MietCheck-DB.
+ * /klauseln — Uebersicht aller 260 Klauseln aus der Klare-Miete-DB.
  *
  * Server Component, voll SSG. Jeder Eintrag verlinkt auf die jeweilige
  * Detail-Seite. Diese Seite ist ein zentraler Hub fuer interne
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     url: "/klauseln",
     type: "website",
     locale: "de_DE",
-    siteName: "MietCheck",
+    siteName: "Klare Miete",
   },
 };
 
@@ -62,13 +62,16 @@ export default function KlauselnUebersicht() {
       {/* ─── NAV ─── */}
       <header className="site-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--line)", background: "rgba(248,247,244,.85)", backdropFilter: "blur(12px)", position: "sticky", top: 0, zIndex: 10 }}>
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", color: "inherit" }} aria-label="Zur Startseite">
-          <div style={{ width: 30, height: 30, borderRadius: 7, background: "var(--blue)", display: "grid", placeItems: "center" }} aria-hidden="true">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true" focusable="false">
-              <path d="M3 21V7l9-5 9 5v14" />
-              <path d="M9 21V13h6v8" />
+          <div style={{ width: 32, height: 32, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }} aria-hidden="true">
+            <svg width="22" height="26" viewBox="0 0 22 26" fill="none" aria-hidden="true" focusable="false">
+              <path d="M2 2h12l6 6v16a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" fill="white" stroke="#1B2B5E" strokeWidth="1.5"/>
+              <path d="M14 2v7h6" fill="none" stroke="#1B2B5E" strokeWidth="1.5" strokeLinejoin="round"/>
+              <line x1="6" y1="12" x2="15" y2="12" stroke="#1B2B5E" strokeWidth="1.5" strokeLinecap="round"/>
+              <line x1="6" y1="16" x2="15" y2="16" stroke="#1B2B5E" strokeWidth="1.5" strokeLinecap="round"/>
+              <circle cx="15" cy="22" r="4" fill="#1B2B5E"/>
             </svg>
           </div>
-          <span style={{ fontWeight: 700, fontSize: 17, letterSpacing: -0.5 }}>MietCheck</span>
+          <span style={{ fontWeight: 700, fontSize: 17, letterSpacing: -0.5 }}>Klare Miete</span>
         </Link>
         <Link href="/#upload" style={{ background: "var(--fg)", color: "var(--bg)", textDecoration: "none", padding: "8px 20px", borderRadius: 8, fontSize: 13, fontWeight: 600, letterSpacing: -0.2 }}>
           Vertrag prüfen
@@ -153,7 +156,7 @@ export default function KlauselnUebersicht() {
           <div style={{ background: "var(--card)", border: "1px solid var(--line)", borderRadius: 18, padding: "40px 32px" }}>
             <h2 style={{ fontFamily: "var(--font-serif), Georgia, serif", fontSize: 26, fontWeight: 400, marginBottom: 10 }}>Deinen Vertrag automatisch prüfen lassen</h2>
             <p style={{ color: "var(--dim)", fontSize: 14.5, marginBottom: 24, lineHeight: 1.6 }}>
-              MietCheck liest deinen Mietvertrag und gleicht jede Klausel automatisch mit dieser Datenbank ab. Kostenlos starten — kein Account nötig.
+              Klare Miete liest deinen Mietvertrag und gleicht jede Klausel automatisch mit dieser Datenbank ab. Kostenlos starten — kein Account nötig.
             </p>
             <Link
               href="/#upload"
@@ -172,7 +175,7 @@ export default function KlauselnUebersicht() {
           <Link href="/agb" style={{ color: "inherit", textDecoration: "none" }}>AGB</Link>
           <Link href="/kontakt" style={{ color: "inherit", textDecoration: "none" }}>Kontakt</Link>
         </nav>
-        <p>© 2026 MietCheck · Automatisierte Ersteinschätzung · Keine Rechtsberatung</p>
+        <p>© 2026 Klare Miete · Automatisierte Ersteinschätzung · Keine Rechtsberatung</p>
       </footer>
     </div>
   );

@@ -24,7 +24,7 @@ export function organizationJsonLd() {
     "@context": "https://schema.org",
     "@type": "Organization",
     "@id": `${SITE_URL}/#organization`,
-    name: "MietCheck",
+    name: "Klare Miete",
     url: SITE_URL,
     // SEO-TODO: logo-URL sobald 512x512 PNG/SVG-Asset existiert
     // logo: `${SITE_URL}/logo.png`,
@@ -43,7 +43,7 @@ export function websiteJsonLd() {
     "@type": "WebSite",
     "@id": `${SITE_URL}/#website`,
     url: SITE_URL,
-    name: "MietCheck",
+    name: "Klare Miete",
     description: "Mietvertrag prüfen – unwirksame Klauseln finden",
     inLanguage: "de-DE",
     publisher: { "@id": `${SITE_URL}/#organization` },

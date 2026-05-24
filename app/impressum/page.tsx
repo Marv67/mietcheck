@@ -22,7 +22,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Impressum",
   description:
-    "Anbieterkennzeichnung und Pflichtangaben gemäß § 5 TMG für MietCheck.",
+    "Anbieterkennzeichnung und Pflichtangaben gemäß § 5 TMG für Klare Miete.",
   alternates: { canonical: "/impressum" },
   // noindex entfernt — Seite hat jetzt substanziellen Inhalt.
 };
@@ -73,7 +73,7 @@ export default function ImpressumPage() {
               <path d="M9 21V13h6v8" />
             </svg>
           </div>
-          <span style={{ fontWeight: 700, fontSize: 17, letterSpacing: -0.5 }}>MietCheck</span>
+          <span style={{ fontWeight: 700, fontSize: 17, letterSpacing: -0.5 }}>Klare Miete</span>
         </Link>
         <Link
           href="/#upload"
@@ -188,7 +188,7 @@ export default function ImpressumPage() {
 
             <h3>Inhalt</h3>
             <p>
-              MietCheck bietet eine automatisierte Ersteinschätzung von Mietvertragsklauseln auf
+              Klare Miete bietet eine automatisierte Ersteinschätzung von Mietvertragsklauseln auf
               Basis öffentlicher Rechtsprechung. Diese Einschätzung ist eine unverbindliche
               Information und stellt{" "}
               <strong>keine Rechtsberatung im Sinne des Rechtsdienstleistungsgesetzes (RDG)</strong>{" "}
@@ -229,7 +229,7 @@ export default function ImpressumPage() {
           <Link href="/agb" style={{ color: "inherit", textDecoration: "none" }}>AGB</Link>
           <Link href="/kontakt" style={{ color: "inherit", textDecoration: "none" }}>Kontakt</Link>
         </nav>
-        <p>© 2026 MietCheck · Automatisierte Ersteinschätzung · Keine Rechtsberatung</p>
+        <p>© 2026 Klare Miete · Automatisierte Ersteinschätzung · Keine Rechtsberatung</p>
       </footer>
     </div>
   );

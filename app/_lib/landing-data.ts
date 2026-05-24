@@ -65,7 +65,7 @@ export const HOW_IT_WORKS: HowItWorksStep[] = [
 
 export type Testimonial = { q: string; n: string; c: string };
 export const TESTIMONIALS: Testimonial[] = [
-  { q: "Hätte fast 2.000 € für eine Endrenovierung bezahlt, die ich gar nicht schuldete. Danke, MietCheck!", n: "Lena M.", c: "München" },
+  { q: "Hätte fast 2.000 € für eine Endrenovierung bezahlt, die ich gar nicht schuldete. Danke, Klare Miete!", n: "Lena M.", c: "München" },
   { q: "In 30 Sekunden drei unwirksame Klauseln gefunden. Mein Mieterverein hat das bestätigt.", n: "Tobias K.", c: "Berlin" },
   { q: "Endlich ein Tool, das Mietrecht verständlich erklärt — ohne Juristendeutsch.", n: "Sarah W.", c: "Hamburg" },
 ];
@@ -74,7 +74,7 @@ export type FaqItem = { q: string; a: string };
 export const FAQ_ITEMS: FaqItem[] = [
   {
     q: "Ist das Rechtsberatung?",
-    a: "Nein. MietCheck bietet eine automatisierte Ersteinschätzung auf Basis öffentlich zugänglicher Rechtsprechung. Für eine verbindliche Bewertung empfehlen wir einen Anwalt oder Mieterverein.",
+    a: "Nein. Klare Miete bietet eine automatisierte Ersteinschätzung auf Basis öffentlich zugänglicher Rechtsprechung. Für eine verbindliche Bewertung empfehlen wir einen Anwalt oder Mieterverein.",
   },
   {
     q: "Was passiert mit meinen Daten?",

@@ -13,7 +13,7 @@
  *    - Bei digitalen Inhalten erlischt das Widerrufsrecht mit
  *      Beginn der Ausfuehrung, sofern der Nutzer ausdruecklich
  *      zustimmt (§ 356 Abs. 5 BGB) — Opt-In im Checkout einbauen!
- *  - Haftungsbeschraenkung: ausdruecklicher Hinweis, dass MietCheck
+ *  - Haftungsbeschraenkung: ausdruecklicher Hinweis, dass Klare Miete
  *    KEINE Rechtsberatung im Sinne des RDG darstellt; Haftung fuer
  *    Fehlbewertungen ausgeschlossen (soweit nicht Vorsatz/grobe
  *    Fahrlaessigkeit)
@@ -33,7 +33,7 @@ import LegalPageLayout from "../_components/legal-page";
 
 export const metadata: Metadata = {
   title: "Allgemeine Geschäftsbedingungen",
-  description: "AGB für die Nutzung von MietCheck",
+  description: "AGB für die Nutzung von Klare Miete",
   alternates: { canonical: "/agb" },
   robots: { index: false, follow: true },
 };
@@ -42,7 +42,7 @@ export default function AgbPage() {
   return (
     <LegalPageLayout
       title="Allgemeine Geschäftsbedingungen"
-      intro="Bedingungen für die Nutzung des MietCheck-Dienstes."
+      intro="Bedingungen für die Nutzung des Klare-Miete-Dienstes."
     />
   );
 }

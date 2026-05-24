@@ -11,7 +11,7 @@
  * Empfohlener Schritt: Generatoren wie datenschutz-generator.de (Dr. Schwenke)
  * als zweite Quelle nutzen und mit diesem Text abgleichen.
  *
- * DSGVO-relevante Verarbeitungen auf MietCheck:
+ * DSGVO-relevante Verarbeitungen auf Klare Miete:
  *  - Mietvertragsanalyse via Anthropic-API (Drittlandtransfer USA)
  *  - Hosting via Vercel (Drittlandtransfer USA)
  *  - Server-Logs
@@ -25,7 +25,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Datenschutzerklärung",
   description:
-    "Informationen zur Verarbeitung personenbezogener Daten auf MietCheck gemäß DSGVO und BDSG.",
+    "Informationen zur Verarbeitung personenbezogener Daten auf Klare Miete gemäß DSGVO und BDSG.",
   alternates: { canonical: "/datenschutz" },
   // noindex entfernt — Seite hat jetzt substanziellen Inhalt.
   // robots: nicht gesetzt → erbt index:true aus layout.tsx.
@@ -77,7 +77,7 @@ export default function DatenschutzPage() {
               <path d="M9 21V13h6v8" />
             </svg>
           </div>
-          <span style={{ fontWeight: 700, fontSize: 17, letterSpacing: -0.5 }}>MietCheck</span>
+          <span style={{ fontWeight: 700, fontSize: 17, letterSpacing: -0.5 }}>Klare Miete</span>
         </Link>
         <Link
           href="/#upload"
@@ -373,7 +373,7 @@ export default function DatenschutzPage() {
           <Link href="/agb" style={{ color: "inherit", textDecoration: "none" }}>AGB</Link>
           <Link href="/kontakt" style={{ color: "inherit", textDecoration: "none" }}>Kontakt</Link>
         </nav>
-        <p>© 2026 MietCheck · Automatisierte Ersteinschätzung · Keine Rechtsberatung</p>
+        <p>© 2026 Klare Miete · Automatisierte Ersteinschätzung · Keine Rechtsberatung</p>
       </footer>
     </div>
   );

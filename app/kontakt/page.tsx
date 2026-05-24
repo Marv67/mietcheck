@@ -20,7 +20,7 @@ import LegalPageLayout from "../_components/legal-page";
 
 export const metadata: Metadata = {
   title: "Kontakt",
-  description: "Kontaktmöglichkeiten zu MietCheck",
+  description: "Kontaktmöglichkeiten zu Klare Miete",
   alternates: { canonical: "/kontakt" },
   robots: { index: false, follow: true },
 };

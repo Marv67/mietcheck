@@ -56,15 +56,15 @@ export const metadata: Metadata = {
   // Wird von app/page.tsx und allen Sub-Routes ueberschrieben.
   // Hier nur Defaults fuer Routen ohne eigene Metadata.
   title: {
-    default: "MietCheck – Mietvertrag online prüfen lassen",
-    template: "%s · MietCheck",
+    default: "Klare Miete – Mietvertrag verstehen",
+    template: "%s · Klare Miete",
   },
   description:
     "Automatisierte Ersteinschätzung deutscher Wohnraummietverträge auf Basis aktueller BGH-Rechtsprechung. Keine Rechtsberatung im Sinne des RDG.",
-  applicationName: "MietCheck",
-  authors: [{ name: "MietCheck" }],
-  creator: "MietCheck",
-  publisher: "MietCheck",
+  applicationName: "Klare Miete",
+  authors: [{ name: "Klare Miete" }],
+  creator: "Klare Miete",
+  publisher: "Klare Miete",
   formatDetection: { email: false, address: false, telephone: false },
   alternates: {
     canonical: "/",
@@ -73,9 +73,9 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "de_DE",
-    siteName: "MietCheck",
+    siteName: "Klare Miete",
     url: "/",
-    title: "MietCheck – Mietvertrag online prüfen lassen",
+    title: "Klare Miete – Mietvertrag verstehen",
     description:
       "90 % aller Mietverträge enthalten ungültige Regelungen. In 30 Sekunden weißt du, welche.",
     // SEO-TODO: og:image hinzufuegen (1200x630 px) sobald Marketing-Asset
@@ -83,7 +83,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "MietCheck – Mietvertrag online prüfen lassen",
+    title: "Klare Miete – Mietvertrag verstehen",
     description:
       "90 % aller Mietverträge enthalten ungültige Regelungen. In 30 Sekunden weißt du, welche.",
     // SEO-TODO: twitter:image + twitter:site sobald Account/Asset existiert
