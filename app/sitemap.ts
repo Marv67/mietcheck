@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { allClauseSlugs } from "./_lib/clauses";
+import { allSzenarioSlugs } from "./_lib/mietminderung";
 
 /**
  * sitemap.xml-Generator (Next.js App Router).
@@ -29,6 +30,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
+  const mietminderungEntries: MetadataRoute.Sitemap = allSzenarioSlugs().map((slug) => ({
+    url: `${SITE_URL}/mietminderung/${slug}`,
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: 0.7,
+  }));
+
   return [
     {
       url: `${SITE_URL}/`,
@@ -42,7 +50,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.9,
     },
+    {
+      url: `${SITE_URL}/mietminderung`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
     ...clauseEntries,
+    ...mietminderungEntries,
     // SEO-TODO: Sobald Impressum/Datenschutz/AGB/Kontakt finale Inhalte
     // haben (statt aktuell noindex-Stubs), hier wieder aufnehmen mit
     // priority 0.3. Solange die Stubs noindex sind, sie BEWUSST nicht
