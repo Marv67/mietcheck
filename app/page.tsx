@@ -142,9 +142,9 @@ export default function Page() {
           <UploadFlow isPaid={isPaid} />
 
           <div className="hero-trust-strip" style={{ color: "var(--dim)" }}>
-            <span>🔒 Daten werden nicht gespeichert</span>
-            <span>⚡ Ergebnis in 30 Sekunden</span>
-            <span>✓ 3 Klauseln kostenlos</span>
+            <span>Keine Datenspeicherung</span>
+            <span>Ergebnis in 30 Sekunden</span>
+            <span>3 Klauseln kostenlos</span>
           </div>
         </section>
 
@@ -194,7 +194,7 @@ export default function Page() {
           {LANDING_CATEGORIES.map((cat) => (
             <div key={cat} style={{ marginBottom: 28 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                <span style={{ fontSize: 18 }} aria-hidden="true">{LANDING_CAT_ICONS[cat]}</span>
+                <span style={{ fontSize: 10, fontWeight: 700, color: "var(--blue)", background: "var(--blue-bg)", padding: "2px 6px", borderRadius: 4, letterSpacing: 0.3, fontFamily: "var(--mono)" }} aria-hidden="true">{LANDING_CAT_ICONS[cat]}</span>
                 <h3 style={{ fontSize: 15, fontWeight: 600 }}>{cat}</h3>
                 <span style={{ fontSize: 11, color: "var(--dim)", fontFamily: "var(--mono)" }}>
                   {LANDING_CLAUSES.filter((c) => c.cat === cat).length} Klauseln

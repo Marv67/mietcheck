@@ -49,11 +49,11 @@ export const LANDING_CLAUSES: LandingClause[] = [
 
 export const LANDING_CATEGORIES = ["Renovierung", "Kosten", "Kündigung", "Nutzung", "Wohnung"] as const;
 export const LANDING_CAT_ICONS: Record<string, string> = {
-  Renovierung: "🎨",
-  Kosten: "💰",
-  Kündigung: "📋",
-  Nutzung: "🏠",
-  Wohnung: "📐",
+  Renovierung: "Re",
+  Kosten: "Ko",
+  Kündigung: "Kü",
+  Nutzung: "Nu",
+  Wohnung: "Wo",
 };
 
 export type HowItWorksStep = { n: string; t: string; d: string };

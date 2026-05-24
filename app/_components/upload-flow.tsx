@@ -55,14 +55,14 @@ const STORAGE_KEY = "mc_analysis_v1";
 
 /* ───────── HILFSFUNKTIONEN ───────── */
 function iconForKategorie(kat?: string): string {
-  if (!kat) return "📄";
+  if (!kat) return "Al";
   const k = kat.toLowerCase();
-  if (/(reparatur|renovierung|schönheits|tapete|rückbau)/.test(k)) return "🎨";
-  if (/(kaution|nebenkosten|betriebs|miete|kosten|verwaltung|heiz|index|staffel|modernisierung)/.test(k)) return "💰";
-  if (/(kündigung|frist|räumung|eigenbedarf|verwertung)/.test(k)) return "📋";
-  if (/(tier|untervermietung|hausordnung|besichtigung|schlüssel|haftung)/.test(k)) return "🏠";
-  if (/(wohnfläche|wohnung|stellplatz|garage|möblier|wg|barrierefrei)/.test(k)) return "📐";
-  return "📄";
+  if (/(reparatur|renovierung|schönheits|tapete|rückbau)/.test(k)) return "Re";
+  if (/(kaution|nebenkosten|betriebs|miete|kosten|verwaltung|heiz|index|staffel|modernisierung)/.test(k)) return "Ko";
+  if (/(kündigung|frist|räumung|eigenbedarf|verwertung)/.test(k)) return "Kü";
+  if (/(tier|untervermietung|hausordnung|besichtigung|schlüssel|haftung)/.test(k)) return "Nu";
+  if (/(wohnfläche|wohnung|stellplatz|garage|möblier|wg|barrierefrei)/.test(k)) return "Wo";
+  return "Al";
 }
 
 function Badge({ status }: { status: string }) {
@@ -104,7 +104,7 @@ function ResultCard({ r, i, isPaid }: { r: AnalyzedClause; i: number; isPaid: bo
       {/* ─── Kartenheader (immer sichtbar) ─── */}
       <div style={{ padding: "16px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
-          <span style={{ fontSize: 14, flexShrink: 0 }} aria-hidden="true">{iconForKategorie(r.kategorie)}</span>
+          <span style={{ fontSize: 10, fontWeight: 700, color: "var(--blue)", background: "var(--blue-bg)", padding: "2px 6px", borderRadius: 4, letterSpacing: 0.3, fontFamily: "var(--mono)", flexShrink: 0 }} aria-hidden="true">{iconForKategorie(r.kategorie)}</span>
           <span style={{ fontSize: 14, fontWeight: 550, color: "var(--fg)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{title}</span>
           {r.id && (
             <span style={{ fontSize: 10, fontFamily: "var(--mono)", color: "var(--dim)", flexShrink: 0 }}>{r.id}</span>
@@ -113,7 +113,10 @@ function ResultCard({ r, i, isPaid }: { r: AnalyzedClause; i: number; isPaid: bo
         <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
           <Badge status={r.status} />
           {!isPaid && hasDetails && (
-            <span style={{ fontSize: 10, color: "var(--dim)" }} aria-label="gesperrt">🔒</span>
+            <svg width="11" height="13" viewBox="0 0 11 13" fill="none" aria-label="gesperrt" style={{ flexShrink: 0 }}>
+              <rect x="1" y="5.5" width="9" height="7" rx="1.5" fill="none" stroke="var(--dim)" strokeWidth="1.3"/>
+              <path d="M3 5.5V3.5a2.5 2.5 0 015 0v2" stroke="var(--dim)" strokeWidth="1.3" strokeLinecap="round"/>
+            </svg>
           )}
           <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false" style={{ transition: "transform .2s", transform: open ? "rotate(180deg)" : "" }}>
             <path d="M4 6l4 4 4-4" fill="none" stroke="var(--dim)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -169,7 +172,10 @@ function ResultCard({ r, i, isPaid }: { r: AnalyzedClause; i: number; isPaid: bo
               </div>
               {/* Lock-Badge */}
               <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 6, background: "rgba(248,247,244,.82)", backdropFilter: "blur(3px)" }}>
-                <span style={{ fontSize: 20 }}>🔒</span>
+                <svg width="20" height="24" viewBox="0 0 20 24" fill="none" aria-hidden="true">
+                  <rect x="2" y="10" width="16" height="13" rx="2.5" fill="none" stroke="var(--dim)" strokeWidth="1.6"/>
+                  <path d="M6 10V7a4 4 0 018 0v3" stroke="var(--dim)" strokeWidth="1.6" strokeLinecap="round"/>
+                </svg>
                 <span style={{ fontSize: 12, fontWeight: 600, color: "var(--dim)", textAlign: "center" }}>
                   Erklärung, Rechtsgrundlage &amp; Empfehlung<br />nach dem Freischalten sichtbar
                 </span>
@@ -467,7 +473,7 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
                 boxShadow: inputMode === mode ? "0 1px 4px rgba(0,0,0,.08)" : "none",
               }}
             >
-              {mode === "pdf" ? "📄 PDF hochladen" : "✏️ Text einfügen"}
+              {mode === "pdf" ? "PDF hochladen" : "Text einfügen"}
             </button>
           ))}
         </div>
@@ -563,7 +569,7 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
 
         {/* DSGVO-Hinweis */}
         <p style={{ margin: "12px 0 0", fontSize: 11.5, color: "#8C8A82", textAlign: "center", lineHeight: 1.5 }}>
-          🔒 Ihr Vertragstext wird ausschließlich zur Analyse verarbeitet und danach sofort
+          Ihr Vertragstext wird ausschließlich zur Analyse verarbeitet und danach sofort
           gelöscht — keine dauerhafte Speicherung, keine Weitergabe.{" "}
           <a href="/datenschutz" style={{ color: "#2558D4", textDecoration: "underline" }}>
             Datenschutzerklärung
@@ -613,7 +619,7 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
 
               {mockMode && (
                 <div role="status" style={{ background: "#FFFBEB", border: "1px solid #FDE68A", color: "#92400E", borderRadius: 10, padding: "10px 14px", fontSize: 12.5, marginBottom: 18, textAlign: "center" }}>
-                  ⚠️ Mock-Modus aktiv (kein <code style={{ fontFamily: "var(--mono)" }}>ANTHROPIC_API_KEY</code> gesetzt). Nur Pattern-basierte Schnellprüfung.
+                  Mock-Modus aktiv — kein <code style={{ fontFamily: "var(--mono)" }}>ANTHROPIC_API_KEY</code> gesetzt. Nur Pattern-basierte Schnellprüfung.
                 </div>
               )}
 
@@ -663,7 +669,7 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
               </div>
 
               <p style={{ textAlign: "center", fontSize: 11, color: "var(--dim)", marginTop: 20, lineHeight: 1.5 }}>
-                ⚖️ Automatisierte Ersteinschätzung auf Basis öffentlicher Rechtsprechung · Keine Rechtsberatung i.S.d. RDG
+                Automatisierte Ersteinschätzung auf Basis öffentlicher Rechtsprechung · Keine Rechtsberatung i.S.d. RDG
               </p>
             </div>
           )}
@@ -690,7 +696,7 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
             >
               <div>
                 <p style={{ color: "#fff", fontSize: 14, fontWeight: 600, margin: 0, letterSpacing: -0.2 }}>
-                  🔒 Alle Details freischalten
+                  Alle Details freischalten
                 </p>
                 <p style={{ color: "rgba(255,255,255,.55)", fontSize: 12, margin: "2px 0 0" }}>
                   Erklärungen · Rechtsgrundlagen · BGH-Urteile · Handlungsempfehlungen
