@@ -68,13 +68,13 @@ export default function DatenschutzPage() {
           style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", color: "inherit" }}
           aria-label="Zur Startseite"
         >
-          <div
-            style={{ width: 30, height: 30, borderRadius: 7, background: "var(--blue)", display: "grid", placeItems: "center" }}
-            aria-hidden="true"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true" focusable="false">
-              <path d="M3 21V7l9-5 9 5v14" />
-              <path d="M9 21V13h6v8" />
+          <div style={{ width: 32, height: 32, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }} aria-hidden="true">
+            <svg width="22" height="26" viewBox="0 0 22 26" fill="none" aria-hidden="true" focusable="false">
+              <path d="M2 2h12l6 6v16a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" fill="white" stroke="#1B2B5E" strokeWidth="1.5"/>
+              <path d="M14 2v7h6" fill="none" stroke="#1B2B5E" strokeWidth="1.5" strokeLinejoin="round"/>
+              <line x1="6" y1="12" x2="15" y2="12" stroke="#1B2B5E" strokeWidth="1.5" strokeLinecap="round"/>
+              <line x1="6" y1="16" x2="15" y2="16" stroke="#1B2B5E" strokeWidth="1.5" strokeLinecap="round"/>
+              <circle cx="15" cy="22" r="4" fill="#1B2B5E"/>
             </svg>
           </div>
           <span style={{ fontWeight: 700, fontSize: 17, letterSpacing: -0.5 }}>Klare Miete</span>
@@ -112,22 +112,6 @@ export default function DatenschutzPage() {
             Gemäß Art. 13, 14 DSGVO und § 13 TMG — Stand: Mai 2026
           </p>
 
-          {/* ─── Platzhalter-Hinweis ─── */}
-          <div
-            className="legal-prose"
-            style={{
-              background: "#FEF3C7",
-              border: "1px solid #FDE68A",
-              borderRadius: 10,
-              padding: "14px 18px",
-              marginBottom: 32,
-              fontSize: 13,
-              color: "#78350F",
-            }}
-          >
-            <strong style={{ color: "#92400E" }}>⚠️ Noch ausstehend:</strong>{" "}
-            <mark>E-Mail-Adresse</mark> für Datenschutzanfragen vor dem Live-Gang eintragen.
-          </div>
 
           <div className="legal-prose">
 
@@ -144,7 +128,7 @@ export default function DatenschutzPage() {
               Deutschland
             </p>
             <p>
-              E-Mail: <a href="mailto:[DATENSCHUTZ@EXAMPLE.COM]"><mark>[DATENSCHUTZ@EXAMPLE.COM]</mark></a>
+              E-Mail: <a href="mailto:klaremiete@gmx.de">klaremiete@gmx.de</a>
             </p>
 
             {/* ── 2. Verarbeitungsübersicht ── */}
@@ -319,7 +303,7 @@ export default function DatenschutzPage() {
             </p>
             <p>
               Anfragen zu Betroffenenrechten richten Sie bitte an:{" "}
-              <a href="mailto:[DATENSCHUTZ@EXAMPLE.COM]"><mark>[DATENSCHUTZ@EXAMPLE.COM]</mark></a>
+              <a href="mailto:klaremiete@gmx.de">klaremiete@gmx.de</a>
             </p>
 
             {/* ── 8. Beschwerderecht ── */}
