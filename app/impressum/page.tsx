@@ -29,12 +29,12 @@ export const metadata: Metadata = {
 
 const CSS = {
   "--bg": "#F8F7F4",
-  "--fg": "#1C1B19",
-  "--dim": "#8C8A82",
+  "--fg": "#1A1815",
+  "--dim": "#76746C",
   "--card": "#FFFFFF",
   "--line": "rgba(0,0,0,.07)",
-  "--blue": "#2558D4",
-  "--blue-bg": "rgba(37,88,212,.06)",
+  "--blue": "#1B2B5E",
+  "--blue-bg": "rgba(27,43,94,.06)",
   "--mono": "var(--font-mono), monospace",
   minHeight: "100vh",
   background: "var(--bg)",

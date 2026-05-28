@@ -568,10 +568,10 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
         )}
 
         {/* DSGVO-Hinweis */}
-        <p style={{ margin: "12px 0 0", fontSize: 11.5, color: "#8C8A82", textAlign: "center", lineHeight: 1.5 }}>
+        <p style={{ margin: "12px 0 0", fontSize: 11.5, color: "#76746C", textAlign: "center", lineHeight: 1.5 }}>
           Ihr Vertragstext wird ausschließlich zur Analyse verarbeitet und danach sofort
           gelöscht — keine dauerhafte Speicherung, keine Weitergabe.{" "}
-          <a href="/datenschutz" style={{ color: "#2558D4", textDecoration: "underline" }}>
+          <a href="/datenschutz" style={{ color: "#1B2B5E", textDecoration: "underline" }}>
             Datenschutzerklärung
           </a>
         </p>
@@ -707,7 +707,7 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
                   onClick={handleCheckout}
                   disabled={checkoutLoading}
                   style={{
-                    background: checkoutLoading ? "#888" : "#2558D4",
+                    background: checkoutLoading ? "#888" : "#1B2B5E",
                     color: "#fff",
                     border: "none",
                     padding: "12px 28px",

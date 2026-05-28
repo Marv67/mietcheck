@@ -153,6 +153,91 @@
 }
 
 /* ─────────────────────────────────────────────────────────────────
+ * Premium-Landing-Components
+ *
+ * Diese Klassen werden auf der Landingpage benutzt und brauchen
+ * Pseudo-Elemente / Combinator-Selektoren, die sich nicht inline
+ * im JSX setzen lassen ohne Hydration-Warnings auszulösen.
+ * ───────────────────────────────────────────────────────────────── */
+
+.hero-bg { position: relative; }
+.hero-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 800px 400px at 50% 0%, rgba(27,43,94,.04), transparent 70%),
+    radial-gradient(ellipse 600px 300px at 80% 20%, rgba(160,127,46,.025), transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+.hero-bg > * { position: relative; z-index: 1; }
+
+.ornament-rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  color: var(--dim-soft, #A8A59C);
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 20px;
+  line-height: 1;
+  margin: 0;
+}
+.ornament-rule::before,
+.ornament-rule::after {
+  content: "";
+  height: 1px;
+  background: var(--hairline, rgba(0,0,0,.05));
+  flex: 0 0 64px;
+}
+
+.section-eyebrow {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--navy, #1B2B5E);
+  margin-bottom: 16px;
+}
+
+.card-lift {
+  transition: transform .25s cubic-bezier(.2,.7,.2,1),
+              box-shadow .25s,
+              border-color .25s;
+}
+@media (hover: hover) {
+  .card-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px -8px rgba(27,43,94,.12);
+    border-color: rgba(27,43,94,.18);
+  }
+}
+
+.pricing-premium {
+  background: linear-gradient(180deg, #1A1815 0%, #0F0E0B 100%);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.04) inset,
+    0 24px 60px -20px rgba(27,43,94,.30),
+    0 8px 20px -8px rgba(0,0,0,.30);
+}
+
+.num-display {
+  font-family: var(--font-serif), Georgia, serif;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.footer-decor {
+  width: 24px;
+  height: 1px;
+  background: var(--dim-soft, #A8A59C);
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* ─────────────────────────────────────────────────────────────────
  * Legal-Prose — wird auf Datenschutz, Impressum, AGB verwendet.
  * CSS-Variablen werden vom jeweiligen Page-Wrapper gesetzt.
  * ───────────────────────────────────────────────────────────────── */
