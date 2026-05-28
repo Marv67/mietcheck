@@ -237,6 +237,31 @@
   vertical-align: middle;
 }
 
+/* Nav-Links nur auf Desktop sichtbar */
+.nav-links { display: none; }
+@media (min-width: 880px) {
+  .nav-links { display: flex; }
+}
+@media (hover: hover) {
+  .nav-links a { transition: color .15s; }
+  .nav-links a:hover { color: var(--fg, #1A1815); }
+}
+
+/* Vergleichs-Tabelle: auf Mobile horizontal scrollbar */
+@media (max-width: 720px) {
+  .compare-grid {
+    min-width: 640px;
+  }
+}
+@media (max-width: 720px) {
+  .compare-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 -24px;
+    padding: 0 24px 8px;
+  }
+}
+
 /* ─────────────────────────────────────────────────────────────────
  * Legal-Prose — wird auf Datenschutz, Impressum, AGB verwendet.
  * CSS-Variablen werden vom jeweiligen Page-Wrapper gesetzt.

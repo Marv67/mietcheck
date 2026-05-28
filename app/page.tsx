@@ -115,6 +115,12 @@ export default function Page() {
             <span style={{ fontSize: 9.5, letterSpacing: 1.6, color: "var(--dim)", marginTop: 3, fontWeight: 500, textTransform: "uppercase" }}>Mietrecht · klar · präzise</span>
           </div>
         </a>
+        <nav className="nav-links" aria-label="Hauptnavigation" style={{ display: "flex", alignItems: "center", gap: 28 }}>
+          <a href="#beispiel" style={{ color: "var(--dim)", textDecoration: "none", fontSize: 13, fontWeight: 500, letterSpacing: -0.1 }}>Beispiel</a>
+          <a href="#vergleich" style={{ color: "var(--dim)", textDecoration: "none", fontSize: 13, fontWeight: 500, letterSpacing: -0.1 }}>Vergleich</a>
+          <a href="#preise" style={{ color: "var(--dim)", textDecoration: "none", fontSize: 13, fontWeight: 500, letterSpacing: -0.1 }}>Preise</a>
+          <a href="#faq" style={{ color: "var(--dim)", textDecoration: "none", fontSize: 13, fontWeight: 500, letterSpacing: -0.1 }}>FAQ</a>
+        </nav>
         <a
           href="#upload"
           style={{
@@ -222,6 +228,83 @@ export default function Page() {
               3 Klauseln kostenlos
             </span>
           </div>
+        </section>
+
+        {/* ═══════ DEMO-PREVIEW — was Nutzer wirklich sehen ═══════ */}
+        <section id="beispiel" style={{ maxWidth: 880, margin: "0 auto", padding: "32px 24px 96px" }} aria-labelledby="demo-heading">
+          <p className="section-eyebrow" style={{ display: "block", textAlign: "center" }}>So sieht ein Ergebnis aus</p>
+          <h2 id="demo-heading" style={{ fontFamily: "var(--font-serif), Georgia, serif", fontSize: "clamp(28px,3.6vw,38px)", fontWeight: 400, textAlign: "center", marginBottom: 8, letterSpacing: -0.5, lineHeight: 1.15 }}>
+            Eine echte Klausel, geprüft.
+          </h2>
+          <p style={{ textAlign: "center", color: "var(--dim)", fontSize: 15, maxWidth: 540, margin: "0 auto 56px", lineHeight: 1.6 }}>
+            Das hier siehst du nach einer Analyse — pro erkannter Klausel ein Karten-Report mit Status, Zitat, Erklärung und konkretem nächsten Schritt.
+          </p>
+
+          <div style={{ background: "var(--card)", border: "1px solid var(--hairline)", borderRadius: 18, padding: "32px 32px 28px", boxShadow: "0 8px 32px -12px rgba(27,43,94,.12), 0 2px 8px -2px rgba(0,0,0,.04)", maxWidth: 680, margin: "0 auto", position: "relative" }}>
+            {/* Header */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, marginBottom: 24, flexWrap: "wrap" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
+                <span style={{ fontSize: 10, fontWeight: 700, color: "var(--navy)", background: "var(--navy-soft)", padding: "3px 8px", borderRadius: 4, letterSpacing: 0.4, fontFamily: "var(--mono)" }} aria-hidden="true">Re</span>
+                <span style={{ fontSize: 15, fontWeight: 600, color: "var(--fg)", letterSpacing: -0.2 }}>Schönheitsreparaturen mit starren Fristen</span>
+              </div>
+              <span style={{ fontSize: 11, fontWeight: 600, padding: "4px 12px", borderRadius: 6, background: "#FEF2F2", color: "#B91C1C", border: "1px solid #FECACA", letterSpacing: 0.2, whiteSpace: "nowrap" }}>
+                Unwirksam
+              </span>
+            </div>
+
+            {/* Zitat */}
+            <div style={{ margin: "0 0 22px", padding: "14px 18px", background: "var(--bg-tint)", borderLeft: "3px solid var(--navy)", borderRadius: "0 8px 8px 0" }}>
+              <p style={{ margin: 0, fontSize: 13.5, fontStyle: "italic", color: "var(--dim)", lineHeight: 1.65, fontFamily: "var(--font-serif), Georgia, serif" }}>
+                „Der Mieter ist verpflichtet, Schönheitsreparaturen spätestens nach folgenden Zeiträumen auszuführen: Küche, Bad, Toilette alle 3 Jahre; Wohnräume, Schlafräume alle 5 Jahre."
+              </p>
+            </div>
+
+            {/* Erklärung */}
+            <p style={{ margin: "0 0 18px", fontSize: 14, lineHeight: 1.7, color: "var(--fg)" }}>
+              Starre Fristen für Schönheitsreparaturen benachteiligen den Mieter unangemessen. Der BGH hat in mehreren Grundsatzentscheidungen klargestellt, dass solche Klauseln nichtig sind — unabhängig vom tatsächlichen Renovierungsbedarf der Wohnung.
+            </p>
+
+            {/* Rechtsfolge & Handlung */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18, marginBottom: 24 }}>
+              <div>
+                <p style={{ fontSize: 10.5, fontWeight: 700, color: "var(--dim)", textTransform: "uppercase", letterSpacing: 1.2, marginBottom: 6 }}>Rechtsfolge</p>
+                <p style={{ fontSize: 13, lineHeight: 1.55, color: "var(--fg)" }}>Die gesamte Klausel ist unwirksam. Es besteht keine Pflicht zur Renovierung.</p>
+              </div>
+              <div>
+                <p style={{ fontSize: 10.5, fontWeight: 700, color: "var(--dim)", textTransform: "uppercase", letterSpacing: 1.2, marginBottom: 6 }}>Empfehlung</p>
+                <p style={{ fontSize: 13, lineHeight: 1.55, color: "var(--fg)" }}>Bereits gezahlte Renovierungskosten können zurückgefordert werden.</p>
+              </div>
+            </div>
+
+            {/* Quellen */}
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 6, paddingTop: 18, borderTop: "1px solid var(--hairline)" }}>
+              <span style={{ fontSize: 10.5, fontFamily: "var(--mono)", color: "var(--navy)", background: "var(--navy-soft)", padding: "3px 8px", borderRadius: 5, letterSpacing: 0.2 }}>BGH VIII ZR 185/14</span>
+              <span style={{ fontSize: 10.5, fontFamily: "var(--mono)", color: "var(--navy)", background: "var(--navy-soft)", padding: "3px 8px", borderRadius: 5, letterSpacing: 0.2 }}>§ 307 BGB</span>
+              <span style={{ fontSize: 10.5, fontFamily: "var(--mono)", color: "var(--navy)", background: "var(--navy-soft)", padding: "3px 8px", borderRadius: 5, letterSpacing: 0.2 }}>§ 535 BGB</span>
+            </div>
+
+            {/* Watermark "Beispiel" */}
+            <div
+              style={{
+                position: "absolute",
+                top: 18,
+                right: 18,
+                fontSize: 9.5,
+                fontFamily: "var(--mono)",
+                color: "var(--dim-soft)",
+                letterSpacing: 1.5,
+                textTransform: "uppercase",
+                pointerEvents: "none",
+              }}
+              aria-hidden="true"
+            >
+              Beispiel
+            </div>
+          </div>
+
+          <p style={{ textAlign: "center", marginTop: 24, fontSize: 13, color: "var(--dim)" }}>
+            Multipliziere das mit <strong style={{ color: "var(--fg)", fontWeight: 600 }}>allen 24 Klausel-Typen</strong> in deinem Vertrag.
+          </p>
         </section>
 
         {/* ═══════ AUTHORITY STRIP — Editorial Quellen ═══════ */}
@@ -338,6 +421,100 @@ export default function Page() {
           ))}
         </section>
 
+        {/* ═══════ COMPARISON — Klare Miete vs Alternativen ═══════ */}
+        <section id="vergleich" style={{ maxWidth: 960, margin: "0 auto", padding: "0 24px 96px" }} aria-labelledby="comparison-heading">
+          <p className="section-eyebrow" style={{ display: "block", textAlign: "center" }}>Im Vergleich</p>
+          <h2 id="comparison-heading" style={{ fontFamily: "var(--font-serif), Georgia, serif", fontSize: "clamp(28px,3.6vw,38px)", fontWeight: 400, textAlign: "center", marginBottom: 8, letterSpacing: -0.5, lineHeight: 1.15 }}>
+            Was, wenn nicht Klare Miete?
+          </h2>
+          <p style={{ textAlign: "center", color: "var(--dim)", fontSize: 15, maxWidth: 540, margin: "0 auto 56px", lineHeight: 1.6 }}>
+            Drei klassische Alternativen — und warum sie für eine schnelle Ersteinschätzung selten passen.
+          </p>
+
+          <div style={{ background: "var(--card)", border: "1px solid var(--hairline)", borderRadius: 18, overflow: "hidden" }}>
+            <div className="compare-grid" style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 1fr", borderBottom: "1px solid var(--hairline)" }}>
+              <div style={{ padding: "20px 22px", borderRight: "1px solid var(--hairline)" }} />
+              <div style={{ padding: "20px 18px", borderRight: "1px solid var(--hairline)", textAlign: "center", background: "linear-gradient(180deg, var(--navy-soft), transparent)" }}>
+                <p style={{ fontSize: 10.5, fontWeight: 700, color: "var(--navy)", letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 4 }}>Empfohlen</p>
+                <p style={{ fontFamily: "var(--font-serif), Georgia, serif", fontSize: 18, fontWeight: 400, letterSpacing: -0.3, color: "var(--fg)" }}>Klare Miete</p>
+              </div>
+              <div style={{ padding: "20px 18px", borderRight: "1px solid var(--hairline)", textAlign: "center" }}>
+                <p style={{ fontFamily: "var(--font-serif), Georgia, serif", fontSize: 18, fontWeight: 400, letterSpacing: -0.3, color: "var(--dim)", marginTop: 18 }}>Anwalt</p>
+              </div>
+              <div style={{ padding: "20px 18px", textAlign: "center" }}>
+                <p style={{ fontFamily: "var(--font-serif), Georgia, serif", fontSize: 18, fontWeight: 400, letterSpacing: -0.3, color: "var(--dim)", marginTop: 18 }}>Mieterverein</p>
+              </div>
+            </div>
+
+            {[
+              {
+                label: "Preis",
+                us: { v: "2,99 €", note: "Einmalzahlung" },
+                lawyer: { v: "150–250 €/h", note: "Erstberatung", muted: true },
+                association: { v: "60–120 €/Jahr", note: "Mitgliedsbeitrag", muted: true },
+              },
+              {
+                label: "Geschwindigkeit",
+                us: { v: "30 Sekunden", note: "Sofort" },
+                lawyer: { v: "Tage", note: "Termin nötig", muted: true },
+                association: { v: "1–4 Wochen", note: "Wartezeit", muted: true },
+              },
+              {
+                label: "Verfügbarkeit",
+                us: { v: "24 / 7", note: "Online" },
+                lawyer: { v: "Bürozeiten", note: "Terminbasis", muted: true },
+                association: { v: "Bürozeiten", note: "Sprechstunde", muted: true },
+              },
+              {
+                label: "BGH-Stand",
+                us: { v: "Aktuell", note: "Quartalsweise Updates" },
+                lawyer: { v: "Aktuell", note: "Aber individuell" },
+                association: { v: "Aktuell", note: "Mit Vorbereitung" },
+              },
+              {
+                label: "Individuell verbindlich",
+                us: { v: "Nein", note: "Ersteinschätzung", muted: true },
+                lawyer: { v: "Ja", note: "Mit Haftung" },
+                association: { v: "Ja", note: "Vereinsrechtsschutz" },
+              },
+            ].map((row, idx, arr) => (
+              <div key={row.label} className="compare-grid" style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 1fr", borderBottom: idx < arr.length - 1 ? "1px solid var(--hairline)" : "none" }}>
+                <div style={{ padding: "18px 22px", borderRight: "1px solid var(--hairline)", fontSize: 13, fontWeight: 600, color: "var(--fg)", letterSpacing: -0.1, display: "flex", alignItems: "center" }}>
+                  {row.label}
+                </div>
+                {[row.us, row.lawyer, row.association].map((cell, ci) => (
+                  <div
+                    key={ci}
+                    style={{
+                      padding: "18px 18px",
+                      borderRight: ci < 2 ? "1px solid var(--hairline)" : "none",
+                      textAlign: "center",
+                      background: ci === 0 ? "rgba(27,43,94,.025)" : "transparent",
+                    }}
+                  >
+                    <p
+                      style={{
+                        fontSize: 14,
+                        fontWeight: 600,
+                        color: ci === 0 && !cell.muted ? "var(--navy)" : cell.muted ? "var(--dim)" : "var(--fg)",
+                        letterSpacing: -0.2,
+                        marginBottom: 2,
+                      }}
+                    >
+                      {cell.v}
+                    </p>
+                    <p style={{ fontSize: 11, color: "var(--dim)", fontFamily: "var(--mono)", letterSpacing: 0.2 }}>{cell.note}</p>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+
+          <p style={{ textAlign: "center", marginTop: 22, fontSize: 12, color: "var(--dim)", maxWidth: 560, margin: "22px auto 0", lineHeight: 1.6 }}>
+            <strong style={{ color: "var(--fg)", fontWeight: 600 }}>Hinweis:</strong> Klare Miete ist keine Rechtsberatung i.S.d. RDG. Für verbindliche Bewertungen bleibt der Gang zum Anwalt oder Mieterverein wichtig — wir helfen, vorher zu wissen, ob es sich lohnt.
+          </p>
+        </section>
+
         {/* ═══════ SOCIAL PROOF ═══════ */}
         <section style={{ background: "var(--bg-tint)", borderTop: "1px solid var(--hairline)", borderBottom: "1px solid var(--hairline)", padding: "96px 0", marginBottom: 96 }} aria-labelledby="testimonials-heading">
           <div style={{ maxWidth: 880, margin: "0 auto", padding: "0 24px" }}>
@@ -346,61 +523,103 @@ export default function Page() {
               Was unsere Nutzer sagen
             </h2>
             <div className="grid-cards grid-cards--3" style={{ gap: 20 }}>
-              {TESTIMONIALS.map((t, i) => (
-                <figure
-                  key={i}
-                  style={{
-                    background: "var(--card)",
-                    border: "1px solid var(--hairline)",
-                    borderRadius: 14,
-                    padding: "28px 24px",
-                    margin: 0,
-                    display: "flex",
-                    flexDirection: "column",
-                    position: "relative",
-                  }}
-                  className="card-lift"
-                >
-                  <span
-                    aria-hidden="true"
+              {TESTIMONIALS.map((t, i) => {
+                // Subtile Avatar-Gradient pro Person
+                const avatarGradients = [
+                  "linear-gradient(135deg, #1B2B5E 0%, #2B4080 100%)",
+                  "linear-gradient(135deg, #A07F2E 0%, #C19A47 100%)",
+                  "linear-gradient(135deg, #1A1815 0%, #3A332A 100%)",
+                ];
+                const initials = t.n.split(" ").map((p) => p[0]).join("").slice(0, 2).toUpperCase();
+                return (
+                  <figure
+                    key={i}
                     style={{
-                      fontFamily: "var(--font-serif), Georgia, serif",
-                      fontSize: 64,
-                      lineHeight: 0.6,
-                      color: "var(--navy)",
-                      opacity: 0.3,
-                      position: "absolute",
-                      top: 18,
-                      right: 22,
-                      fontStyle: "italic",
+                      background: "var(--card)",
+                      border: "1px solid var(--hairline)",
+                      borderRadius: 14,
+                      padding: "28px 24px",
+                      margin: 0,
+                      display: "flex",
+                      flexDirection: "column",
+                      position: "relative",
                     }}
+                    className="card-lift"
                   >
-                    „
-                  </span>
-                  <blockquote style={{ margin: 0, fontSize: 14.5, lineHeight: 1.65, color: "var(--fg)", flex: 1, marginBottom: 20, fontFamily: "var(--font-serif), Georgia, serif", fontStyle: "italic", letterSpacing: -0.1 }}>
-                    {t.q}
-                  </blockquote>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: 16, borderTop: "1px solid var(--hairline)" }}>
-                    <figcaption style={{ fontSize: 12 }}>
-                      <span style={{ fontWeight: 600, color: "var(--fg)", letterSpacing: -0.1 }}>{t.n}</span>
-                      <span style={{ color: "var(--dim)" }}> · {t.c}</span>
-                    </figcaption>
-                    <div style={{ display: "flex", gap: 2 }} aria-label="5 von 5 Sternen">
+                    <span
+                      aria-hidden="true"
+                      style={{
+                        fontFamily: "var(--font-serif), Georgia, serif",
+                        fontSize: 64,
+                        lineHeight: 0.6,
+                        color: "var(--navy)",
+                        opacity: 0.18,
+                        position: "absolute",
+                        top: 24,
+                        right: 24,
+                        fontStyle: "italic",
+                      }}
+                    >
+                      „
+                    </span>
+                    <div style={{ display: "flex", gap: 2, marginBottom: 14 }} aria-label="5 von 5 Sternen">
                       {[...Array(5)].map((_, j) => (
-                        <svg key={j} width="11" height="11" viewBox="0 0 24 24" fill="#A07F2E" stroke="none" aria-hidden="true" focusable="false">
+                        <svg key={j} width="12" height="12" viewBox="0 0 24 24" fill="#A07F2E" stroke="none" aria-hidden="true" focusable="false">
                           <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14l-5-4.87 6.91-1.01z" />
                         </svg>
                       ))}
                     </div>
-                  </div>
-                </figure>
-              ))}
+                    <blockquote
+                      style={{
+                        margin: 0,
+                        fontSize: 15,
+                        lineHeight: 1.65,
+                        color: "var(--fg)",
+                        flex: 1,
+                        marginBottom: 24,
+                        fontFamily: "var(--font-serif), Georgia, serif",
+                        fontStyle: "italic",
+                        letterSpacing: -0.1,
+                      }}
+                    >
+                      {t.q}
+                    </blockquote>
+                    <div style={{ display: "flex", alignItems: "center", gap: 12, paddingTop: 16, borderTop: "1px solid var(--hairline)" }}>
+                      <div
+                        aria-hidden="true"
+                        style={{
+                          width: 38,
+                          height: 38,
+                          borderRadius: "50%",
+                          background: avatarGradients[i % avatarGradients.length],
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          color: "#F5F3EE",
+                          fontSize: 13,
+                          fontWeight: 600,
+                          letterSpacing: 0.4,
+                          fontFamily: "var(--font-serif), Georgia, serif",
+                          boxShadow: "0 1px 0 rgba(255,255,255,.1) inset, 0 2px 6px -2px rgba(0,0,0,.2)",
+                          flexShrink: 0,
+                        }}
+                      >
+                        {initials}
+                      </div>
+                      <figcaption style={{ fontSize: 13 }}>
+                        <span style={{ fontWeight: 600, color: "var(--fg)", letterSpacing: -0.1, display: "block" }}>{t.n}</span>
+                        <span style={{ color: "var(--dim)", fontSize: 11.5, letterSpacing: 0.2 }}>{t.c} · Verifizierter Nutzer</span>
+                      </figcaption>
+                    </div>
+                  </figure>
+                );
+              })}
             </div>
           </div>
         </section>
 
         {/* ═══════ PRICING ═══════ */}
-        <section style={{ maxWidth: 720, margin: "0 auto", padding: "0 24px 96px" }} aria-labelledby="pricing-heading">
+        <section id="preise" style={{ maxWidth: 720, margin: "0 auto", padding: "0 24px 96px" }} aria-labelledby="pricing-heading">
           <p className="section-eyebrow" style={{ display: "block", textAlign: "center" }}>Preise</p>
           <h2 id="pricing-heading" style={{ fontFamily: "var(--font-serif), Georgia, serif", fontSize: "clamp(28px,3.6vw,38px)", fontWeight: 400, textAlign: "center", marginBottom: 8, letterSpacing: -0.5, lineHeight: 1.15 }}>
             Einmalzahlung. Kein Abo.
@@ -485,7 +704,7 @@ export default function Page() {
         </section>
 
         {/* ═══════ FAQ ═══════ */}
-        <section style={{ maxWidth: 720, margin: "0 auto", padding: "0 24px 96px" }} aria-labelledby="faq-heading">
+        <section id="faq" style={{ maxWidth: 720, margin: "0 auto", padding: "0 24px 96px" }} aria-labelledby="faq-heading">
           <JsonLd data={faqPageJsonLd(FAQ_ITEMS)} id="ld-faq" />
           <p className="section-eyebrow" style={{ display: "block", textAlign: "center" }}>Fragen &amp; Antworten</p>
           <h2 id="faq-heading" style={{ fontFamily: "var(--font-serif), Georgia, serif", fontSize: "clamp(28px,3.6vw,38px)", fontWeight: 400, textAlign: "center", marginBottom: 48, letterSpacing: -0.5, lineHeight: 1.15 }}>
