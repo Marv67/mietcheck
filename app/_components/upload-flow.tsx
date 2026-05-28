@@ -694,7 +694,7 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
                 borderTop: "1px solid rgba(255,255,255,.1)",
               }}
             >
-              <div>
+              <div style={{ flex: 1, minWidth: 0 }}>
                 <p style={{ color: "#fff", fontSize: 14, fontWeight: 600, margin: 0, letterSpacing: -0.2 }}>
                   Alle Details freischalten
                 </p>
@@ -702,25 +702,30 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
                   Erklärungen · Rechtsgrundlagen · BGH-Urteile · Handlungsempfehlungen
                 </p>
               </div>
-              <button
-                onClick={handleCheckout}
-                disabled={checkoutLoading}
-                style={{
-                  background: checkoutLoading ? "#888" : "#2558D4",
-                  color: "#fff",
-                  border: "none",
-                  padding: "12px 28px",
-                  borderRadius: 10,
-                  fontSize: 15,
-                  fontWeight: 700,
-                  cursor: checkoutLoading ? "wait" : "pointer",
-                  letterSpacing: -0.3,
-                  whiteSpace: "nowrap",
-                  flexShrink: 0,
-                }}
-              >
-                {checkoutLoading ? "Weiterleitung …" : "Jetzt freischalten — 2,99 €"}
-              </button>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 6, flexShrink: 0 }}>
+                <button
+                  onClick={handleCheckout}
+                  disabled={checkoutLoading}
+                  style={{
+                    background: checkoutLoading ? "#888" : "#2558D4",
+                    color: "#fff",
+                    border: "none",
+                    padding: "12px 28px",
+                    borderRadius: 10,
+                    fontSize: 15,
+                    fontWeight: 700,
+                    cursor: checkoutLoading ? "wait" : "pointer",
+                    letterSpacing: -0.3,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {checkoutLoading ? "Weiterleitung …" : "Jetzt freischalten — 2,99 €"}
+                </button>
+                <p style={{ color: "rgba(255,255,255,.45)", fontSize: 10.5, margin: 0, textAlign: "right", lineHeight: 1.4, maxWidth: 320 }}>
+                  Mit Klick verlangen Sie ausdrücklich die sofortige Ausführung und bestätigen, dass Ihr Widerrufsrecht damit erlischt (§&nbsp;356 Abs.&nbsp;5 BGB).{" "}
+                  <a href="/agb" style={{ color: "rgba(255,255,255,.7)", textDecoration: "underline" }}>AGB</a>
+                </p>
+              </div>
             </div>
           )}
         </div>

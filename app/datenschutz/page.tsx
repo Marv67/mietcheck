@@ -200,19 +200,25 @@ export default function DatenschutzPage() {
               Anthropic verarbeitet diesen Text ausschließlich zur Erbringung der Dienst-Leistung.
             </p>
             <div className="notice-box">
-              <strong>Zero Data Retention:</strong> Anthropic verwendet die über die API
-              übermittelten Inhalte <strong>nicht</strong> zum Training von KI-Modellen. Es
-              besteht keine dauerhafte Speicherung der Anfrageinhalte auf Anthropics Servern
-              nach Abschluss der Verarbeitung (Anthropic Zero Retention Policy für API-Nutzer).
+              <strong>Kein Training mit Nutzerdaten:</strong> Anthropic verwendet nach eigenen
+              Angaben Inhalte, die über die API übermittelt werden, standardmäßig{" "}
+              <strong>nicht zum Training</strong> von KI-Modellen. Anfrageinhalte werden
+              gemäß den{" "}
+              <a href="https://www.anthropic.com/legal/commercial-terms" target="_blank" rel="noopener noreferrer">Commercial Terms</a>{" "}
+              für maximal 30 Tage zu Zwecken der Missbrauchserkennung gespeichert und
+              anschließend gelöscht.
             </div>
             <p>
-              Es besteht ein Auftragsverarbeitungsvertrag (AVV) mit Anthropic gemäß Art. 28 DSGVO.
+              Mit der Nutzung der Anthropic-API gelten deren{" "}
+              <a href="https://www.anthropic.com/legal/dpa" target="_blank" rel="noopener noreferrer">Data Processing Addendum (DPA)</a>{" "}
+              und die EU-Standardvertragsklauseln (SCC) als Auftragsverarbeitungsvereinbarung
+              gemäß Art. 28 DSGVO.
             </p>
             <p>
               <strong>Drittlandtransfer (USA):</strong> Die Übermittlung an Anthropic erfolgt auf
               Basis von EU-Standardvertragsklauseln (SCC) gemäß Art. 46 Abs. 2 lit. c DSGVO.
-              Sofern Anthropic dem EU-US Data Privacy Framework beigetreten ist, stützt sich die
-              Übermittlung zusätzlich auf den Angemessenheitsbeschluss der EU-Kommission gemäß
+              Anthropic ist Teilnehmer am EU-US Data Privacy Framework; die Übermittlung stützt
+              sich zusätzlich auf den Angemessenheitsbeschluss der EU-Kommission gemäß
               Art. 45 DSGVO.
             </p>
 
@@ -229,34 +235,94 @@ export default function DatenschutzPage() {
             </p>
             <p>
               Bei jedem Seitenaufruf und jeder API-Anfrage werden technische Metadaten (u. a.
-              IP-Adresse, Zeitstempel) durch Vercel erfasst. Es besteht ein AVV mit Vercel gemäß
-              Art. 28 DSGVO. Die Übermittlung erfolgt auf Basis von EU-Standardvertragsklauseln
-              (SCC) gemäß Art. 46 Abs. 2 lit. c DSGVO.
+              IP-Adresse, Zeitstempel) durch Vercel erfasst. Mit der Nutzung der Vercel-Plattform
+              gelten deren{" "}
+              <a href="https://vercel.com/legal/dpa" target="_blank" rel="noopener noreferrer">Data Processing Addendum</a>{" "}
+              und die EU-Standardvertragsklauseln (SCC) als Auftragsverarbeitungsvereinbarung
+              gemäß Art. 28 DSGVO. Die Übermittlung erfolgt auf Basis von SCC gemäß Art. 46
+              Abs. 2 lit. c DSGVO. Vercel ist zudem Teilnehmer am EU-US Data Privacy Framework.
             </p>
 
-            {/* ── 5. Cookies ── */}
-            <h2>5. Cookies und Tracking</h2>
+            {/* ── 5. Zahlungsabwicklung (Stripe) ── */}
+            <h2>5. Zahlungsabwicklung (Stripe)</h2>
+            <p>
+              Für die Abwicklung kostenpflichtiger Bestellungen (Vollreport für 2,99 €) nutzen
+              wir den Zahlungsdienstleister:
+            </p>
+            <p>
+              <strong>Stripe Payments Europe, Ltd.</strong><br />
+              1 Grand Canal Street Lower, Grand Canal Dock<br />
+              Dublin, D02 H210, Irland<br />
+              Datenschutz: <a href="https://stripe.com/de/privacy" target="_blank" rel="noopener noreferrer">stripe.com/de/privacy</a>
+            </p>
+            <p>
+              Beim Bezahlvorgang werden Sie auf eine von Stripe gehostete Checkout-Seite
+              weitergeleitet. Stripe verarbeitet dort folgende Daten in eigener Verantwortung:
+            </p>
+            <ul>
+              <li>Name und ggf. Rechnungsadresse</li>
+              <li>E-Mail-Adresse</li>
+              <li>Zahlungsdaten (Kartennummer, Ablaufdatum, CVC) bzw. PayPal-Identifier</li>
+              <li>IP-Adresse, Browser-Informationen, Geräte-Fingerprint (Betrugsprävention)</li>
+              <li>Zahlungsbetrag und Transaktions-ID</li>
+            </ul>
+            <p>
+              Der Anbieter erhält von Stripe nach erfolgreicher Zahlung lediglich die
+              <strong> Bestätigung der Zahlung</strong> und eine{" "}
+              <strong>anonymisierte Sitzungs-ID</strong>. Vollständige Zahlungsdaten (Kartennummer
+              etc.) erhält der Anbieter zu keinem Zeitpunkt.
+            </p>
+            <p>
+              <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO (Vertragsabwicklung).
+            </p>
+            <p>
+              <strong>Drittlandtransfer:</strong> Stripe Payments Europe Ltd. hat ihren Sitz in
+              Irland (EU). Eine Übermittlung in die USA (Stripe Inc.) erfolgt nur in technisch
+              notwendigem Umfang auf Basis der EU-Standardvertragsklauseln. Weitere
+              Informationen: Stripe-Datenschutzerklärung.
+            </p>
+
+            {/* ── 6. Cookies ── */}
+            <h2>6. Cookies</h2>
             <div className="notice-box">
               Wir verwenden <strong>keine Tracking-Cookies</strong>, kein Web-Analytics
               (Google Analytics, Matomo etc.) und keine Retargeting- oder Social-Media-Pixel.
-              Es ist <strong>kein Cookie-Einverständnis</strong> erforderlich.
+              Ein Cookie-Banner ist daher nicht erforderlich.
             </div>
             <p>
-              Die einzige Speicheroperation im Browser ist der React-Anwendungszustand (z. B. das
-              Analyse-Ergebnis) im Arbeitsspeicher der aktuellen Sitzung — kein persistentes
-              Cookie, keine Übertragung an Dritte.
+              Wir setzen ausschließlich folgenden <strong>technisch notwendigen Cookie</strong>:
+            </p>
+            <ul>
+              <li>
+                <strong><code style={{ fontFamily: "var(--mono)" }}>mc_paid</code>:</strong>{" "}
+                Wird nach erfolgreicher Zahlung gesetzt und schaltet den Vollreport frei.
+                Speicherdauer: 7 Tage. Keine personenbeziehbaren Inhalte.
+              </li>
+            </ul>
+            <p>
+              <strong>Rechtsgrundlage:</strong> § 25 Abs. 2 Nr. 2 TTDSG — der Cookie ist
+              unbedingt erforderlich, damit der vom Nutzer ausdrücklich angeforderte Dienst
+              (Freischaltung des bezahlten Vollreports) bereitgestellt werden kann. Eine
+              Einwilligung ist daher nicht erforderlich.
+            </p>
+            <p>
+              Außerdem speichert die Anwendung das Analyse-Ergebnis temporär im{" "}
+              <code style={{ fontFamily: "var(--mono)" }}>sessionStorage</code> des Browsers,
+              um es nach Rückkehr von der Stripe-Zahlung wiederherstellen zu können. Dies ist
+              eine reine Browser-Funktion ohne Datenübertragung an Dritte; die Daten werden
+              beim Schließen des Tabs automatisch gelöscht.
             </p>
 
-            {/* ── 6. Schriftarten ── */}
-            <h2>6. Schriftarten</h2>
+            {/* ── 7. Schriftarten ── */}
+            <h2>7. Schriftarten</h2>
             <p>
               Wir binden Schriftarten (Fonts) selbst-gehostet über Next.js ein. Es werden{" "}
               <strong>keine Anfragen</strong> an Google Fonts oder andere externe Font-Server
               gestellt. Kein Datentransfer an Dritte beim Laden der Schriftarten.
             </p>
 
-            {/* ── 7. Betroffenenrechte ── */}
-            <h2>7. Ihre Rechte als betroffene Person</h2>
+            {/* ── 8. Betroffenenrechte ── */}
+            <h2>8. Ihre Rechte als betroffene Person</h2>
             <p>Nach der DSGVO stehen Ihnen folgende Rechte zu:</p>
             <table>
               <thead>
@@ -306,8 +372,8 @@ export default function DatenschutzPage() {
               <a href="mailto:klaremiete@gmx.de">klaremiete@gmx.de</a>
             </p>
 
-            {/* ── 8. Beschwerderecht ── */}
-            <h2>8. Beschwerderecht bei der Aufsichtsbehörde</h2>
+            {/* ── 9. Beschwerderecht ── */}
+            <h2>9. Beschwerderecht bei der Aufsichtsbehörde</h2>
             <p>
               Sie haben das Recht, sich bei der zuständigen Datenschutz-Aufsichtsbehörde
               zu beschweren (Art. 77 DSGVO). Die für unseren Sitz (Baden-Württemberg)
@@ -323,8 +389,8 @@ export default function DatenschutzPage() {
               </a>
             </p>
 
-            {/* ── 9. Profiling ── */}
-            <h2>9. Automatisierte Entscheidungsfindung und Profiling</h2>
+            {/* ── 10. Profiling ── */}
+            <h2>10. Automatisierte Entscheidungsfindung und Profiling</h2>
             <p>
               Wir treffen <strong>keine automatisierten Einzelentscheidungen</strong> im Sinne
               von Art. 22 DSGVO, die rechtliche Wirkung entfalten oder Sie in ähnlicher Weise
@@ -336,12 +402,12 @@ export default function DatenschutzPage() {
               Ein Nutzer-Profil wird zu keinem Zeitpunkt erstellt.
             </p>
 
-            {/* ── 10. Änderungen ── */}
-            <h2>10. Änderungen dieser Erklärung</h2>
+            {/* ── 11. Änderungen ── */}
+            <h2>11. Änderungen dieser Erklärung</h2>
             <p>
               Wir behalten uns vor, diese Datenschutzerklärung bei Änderungen unserer Dienste
               oder der rechtlichen Anforderungen anzupassen. Die jeweils aktuelle Fassung ist
-              stets unter <Link href="/datenschutz" style={{ color: "var(--blue)" }}>mietcheck.de/datenschutz</Link> abrufbar.
+              stets unter <Link href="/datenschutz" style={{ color: "var(--blue)" }}>dieser Seite</Link> abrufbar.
             </p>
             <p>
               <em>Stand: Mai 2026</em>

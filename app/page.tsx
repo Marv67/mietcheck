@@ -258,7 +258,7 @@ export default function Page() {
             <div style={{ background: "var(--fg)", color: "var(--bg)", borderRadius: 14, padding: "28px 22px", position: "relative" }}>
               <div style={{ position: "absolute", top: 14, right: 14, fontSize: 10, fontWeight: 600, background: "var(--blue)", color: "#fff", padding: "3px 10px", borderRadius: 6 }}>Beliebt</div>
               <p style={{ fontSize: 12, fontWeight: 600, opacity: 0.6, textTransform: "uppercase", letterSpacing: 1, marginBottom: 8 }}>Vollreport</p>
-              <p style={{ fontSize: 32, fontWeight: 700, letterSpacing: -1, marginBottom: 4 }}>4,99 €</p>
+              <p style={{ fontSize: 32, fontWeight: 700, letterSpacing: -1, marginBottom: 4 }}>2,99 €</p>
               <p style={{ fontSize: 13, opacity: 0.6, marginBottom: 18 }}>Einmalzahlung</p>
               <ul style={{ listStyle: "none", padding: 0, fontSize: 13, lineHeight: 2.2 }}>
                 <li>✓ Alle {LANDING_CLAUSES.length} Klauseln geprüft</li>

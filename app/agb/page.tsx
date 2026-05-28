@@ -189,35 +189,87 @@ export default function AgbPage() {
             </p>
 
             {/* § 5 */}
-            <h2>§ 5 Widerrufsrecht</h2>
+            <h2>§ 5 Widerrufsrecht und Widerrufsbelehrung</h2>
+
+            <h3>Widerrufsrecht</h3>
             <p>
-              Als Verbraucher steht Ihnen grundsätzlich ein 14-tägiges Widerrufsrecht zu
-              (§§ 312g, 355 BGB). Bei digitalen Inhalten, die nicht auf einem körperlichen
-              Datenträger geliefert werden, erlischt das Widerrufsrecht jedoch gemäß
-              § 356 Abs. 5 BGB vorzeitig, wenn
+              Sie haben das Recht, binnen <strong>vierzehn Tagen</strong> ohne Angabe von
+              Gründen diesen Vertrag zu widerrufen. Die Widerrufsfrist beträgt vierzehn Tage
+              ab dem Tag des Vertragsabschlusses.
             </p>
-            <ul>
+            <p>
+              Um Ihr Widerrufsrecht auszuüben, müssen Sie uns
+            </p>
+            <p>
+              Marvin Kalkschmid<br />
+              Berliner Ring 57<br />
+              72076 Tübingen<br />
+              E-Mail: <a href="mailto:klaremiete@gmx.de">klaremiete@gmx.de</a>
+            </p>
+            <p>
+              mittels einer eindeutigen Erklärung (z. B. ein mit der Post versandter Brief
+              oder eine E-Mail) über Ihren Entschluss, diesen Vertrag zu widerrufen,
+              informieren. Sie können dafür das beigefügte Muster-Widerrufsformular
+              verwenden, das jedoch nicht vorgeschrieben ist.
+            </p>
+            <p>
+              Zur Wahrung der Widerrufsfrist reicht es aus, dass Sie die Mitteilung über
+              die Ausübung des Widerrufsrechts vor Ablauf der Widerrufsfrist absenden.
+            </p>
+
+            <h3>Folgen des Widerrufs</h3>
+            <p>
+              Wenn Sie diesen Vertrag widerrufen, haben wir Ihnen alle Zahlungen, die wir
+              von Ihnen erhalten haben, unverzüglich und spätestens binnen vierzehn Tagen
+              ab dem Tag zurückzuzahlen, an dem die Mitteilung über Ihren Widerruf bei uns
+              eingegangen ist. Für die Rückzahlung verwenden wir dasselbe Zahlungsmittel,
+              das Sie bei der ursprünglichen Transaktion eingesetzt haben, es sei denn,
+              mit Ihnen wurde ausdrücklich etwas anderes vereinbart.
+            </p>
+
+            <h3>Vorzeitiges Erlöschen des Widerrufsrechts</h3>
+            <p>
+              Das Widerrufsrecht erlischt bei einem Vertrag zur Lieferung von nicht auf
+              einem körperlichen Datenträger befindlichen digitalen Inhalten gemäß
+              § 356 Abs. 5 BGB <strong>nur dann</strong>, wenn der Anbieter mit der
+              Ausführung des Vertrags begonnen hat, nachdem Sie
+            </p>
+            <ol>
               <li>
-                der Anbieter mit der Ausführung des Vertrags — d. h. der Freischaltung des
-                Vollreports — begonnen hat, und
+                ausdrücklich zugestimmt haben, dass der Anbieter mit der Ausführung des
+                Vertrags vor Ablauf der Widerrufsfrist beginnt, und
               </li>
               <li>
-                der Nutzer ausdrücklich zugestimmt hat, dass der Anbieter mit der Ausführung
-                vor Ablauf der Widerrufsfrist beginnt, und bestätigt hat, dass er mit Beginn
-                der Ausführung sein Widerrufsrecht verliert.
+                Ihre Kenntnis davon bestätigt haben, dass Sie durch Ihre Zustimmung mit
+                Beginn der Ausführung des Vertrags Ihr Widerrufsrecht verlieren.
               </li>
-            </ul>
+            </ol>
             <p>
-              Da der Vollreport unmittelbar nach Zahlungsabschluss freigeschaltet wird und
-              der Nutzer dies durch Abschluss des Zahlungsvorgangs bestätigt,{" "}
-              <strong>erlischt das Widerrufsrecht mit der Freischaltung des Vollreports.</strong>
+              Liegen diese Voraussetzungen nicht vor, bleibt das 14-tägige Widerrufsrecht
+              bestehen. Anfragen auf Widerruf und Rückerstattung richten Sie bitte an:{" "}
+              <a href="mailto:klaremiete@gmx.de">klaremiete@gmx.de</a>. Die Erstattung
+              erfolgt in der Regel innerhalb von 5 Werktagen über Stripe.
             </p>
+
+            <h3>Muster-Widerrufsformular</h3>
             <p>
-              Sollte die Freischaltung aus technischen Gründen auf Seiten des Anbieters
-              scheitern, steht dem Nutzer ein Anspruch auf Erstattung des Kaufpreises zu.
-              Anfragen bitte an:{" "}
-              <a href="mailto:klaremiete@gmx.de">klaremiete@gmx.de</a>
+              (Wenn Sie den Vertrag widerrufen wollen, dann füllen Sie bitte dieses
+              Formular aus und senden Sie es zurück.)
             </p>
+            <div style={{ background: "var(--bg)", border: "1px solid var(--line)", borderRadius: 8, padding: "16px 20px", fontSize: 13, lineHeight: 1.7 }}>
+              An Marvin Kalkschmid, Berliner Ring 57, 72076 Tübingen,
+              E-Mail: klaremiete@gmx.de<br /><br />
+              Hiermit widerrufe(n) ich/wir (*) den von mir/uns (*) abgeschlossenen Vertrag
+              über die Erbringung der folgenden Dienstleistung (*):<br /><br />
+              ____________________________________________<br /><br />
+              Bestellt am (*): __________________<br />
+              Name des/der Verbraucher(s): __________________<br />
+              Anschrift des/der Verbraucher(s): __________________<br />
+              Unterschrift des/der Verbraucher(s) (nur bei Mitteilung auf Papier):
+              __________________<br />
+              Datum: __________________<br /><br />
+              (*) Unzutreffendes streichen.
+            </div>
 
             {/* § 6 */}
             <h2>§ 6 Kein Rechtsberatungsverhältnis</h2>
