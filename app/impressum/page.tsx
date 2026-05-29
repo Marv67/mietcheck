@@ -116,7 +116,7 @@ export default function ImpressumPage() {
             <h2>Anbieter</h2>
             <p>
               Marvin Kalkschmid<br />
-              Berliner Ring 57<br />
+              Karl-Theodor-Straße 19<br />
               72076 Tübingen<br />
               Deutschland
             </p>
@@ -137,7 +137,7 @@ export default function ImpressumPage() {
             <h2>Verantwortlich für den Inhalt (§ 18 Abs. 2 MStV)</h2>
             <p>
               Marvin Kalkschmid<br />
-              Berliner Ring 57<br />
+              Karl-Theodor-Straße 19<br />
               72076 Tübingen
             </p>
 

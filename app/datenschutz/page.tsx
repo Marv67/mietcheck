@@ -123,7 +123,7 @@ export default function DatenschutzPage() {
             </p>
             <p>
               Marvin Kalkschmid<br />
-              Berliner Ring 57<br />
+              Karl-Theodor-Straße 19<br />
               72076 Tübingen<br />
               Deutschland
             </p>

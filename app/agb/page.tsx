@@ -98,7 +98,7 @@ export default function AgbPage() {
             </p>
             <p>
               Marvin Kalkschmid<br />
-              Berliner Ring 57<br />
+              Karl-Theodor-Straße 19<br />
               72076 Tübingen<br />
               E-Mail: <a href="mailto:klaremiete@gmx.de">klaremiete@gmx.de</a>
             </p>
@@ -202,7 +202,7 @@ export default function AgbPage() {
             </p>
             <p>
               Marvin Kalkschmid<br />
-              Berliner Ring 57<br />
+              Karl-Theodor-Straße 19<br />
               72076 Tübingen<br />
               E-Mail: <a href="mailto:klaremiete@gmx.de">klaremiete@gmx.de</a>
             </p>
@@ -257,7 +257,7 @@ export default function AgbPage() {
               Formular aus und senden Sie es zurück.)
             </p>
             <div style={{ background: "var(--bg)", border: "1px solid var(--line)", borderRadius: 8, padding: "16px 20px", fontSize: 13, lineHeight: 1.7 }}>
-              An Marvin Kalkschmid, Berliner Ring 57, 72076 Tübingen,
+              An Marvin Kalkschmid, Karl-Theodor-Straße 19, 72076 Tübingen,
               E-Mail: klaremiete@gmx.de<br /><br />
               Hiermit widerrufe(n) ich/wir (*) den von mir/uns (*) abgeschlossenen Vertrag
               über die Erbringung der folgenden Dienstleistung (*):<br /><br />
