@@ -17,7 +17,20 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const PRICE_CENTS = 299; // 2,99 EUR
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+
+/**
+ * Basis-URL fuer Stripe-Redirects. Bevorzugt NEXT_PUBLIC_SITE_URL;
+ * faellt sonst auf den Request-Origin zurueck (verhindert den
+ * localhost-Footgun, wenn die Env-Variable in Produktion fehlt).
+ */
+function siteUrl(req: NextRequest): string {
+  const env = process.env.NEXT_PUBLIC_SITE_URL;
+  if (env) return env.replace(/\/$/, "");
+  const host = req.headers.get("x-forwarded-host") || req.headers.get("host");
+  if (!host) return "http://localhost:3000";
+  const proto = req.headers.get("x-forwarded-proto") || (host.startsWith("localhost") ? "http" : "https");
+  return `${proto}://${host}`;
+}
 
 function stripeClient() {
   const key = process.env.STRIPE_SECRET_KEY;
@@ -26,7 +39,7 @@ function stripeClient() {
 }
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
-  let body: { returnTo?: unknown };
+  let body: { returnTo?: unknown; analysisId?: unknown };
   try {
     body = await req.json();
   } catch {
@@ -34,6 +47,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   const returnTo = typeof body.returnTo === "string" ? body.returnTo : "/";
+  const analysisId = typeof body.analysisId === "string" ? body.analysisId : "";
+  const SITE_URL = siteUrl(req);
 
   let stripe: Stripe;
   try {
@@ -57,6 +72,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       mode: "payment",
       payment_method_types: ["card", "paypal"],
       locale: "de",
+      // Bindet die Analyse an diese Zahlung — /api/unlock entschluesselt
+      // nur den Report mit genau dieser analysisId.
+      metadata: analysisId ? { analysisId } : undefined,
       line_items: [
         {
           quantity: 1,

@@ -24,8 +24,21 @@ import Stripe from "stripe";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 90; // 90 Tage
+
+/**
+ * Basis-URL fuer Redirects. Bevorzugt NEXT_PUBLIC_SITE_URL; faellt
+ * sonst auf den Request-Host zurueck (verhindert den localhost-Footgun,
+ * wenn die Env-Variable in Produktion fehlt).
+ */
+function siteUrl(req: NextRequest): string {
+  const env = process.env.NEXT_PUBLIC_SITE_URL;
+  if (env) return env.replace(/\/$/, "");
+  const host = req.headers.get("x-forwarded-host") || req.headers.get("host");
+  if (!host) return "http://localhost:3000";
+  const proto = req.headers.get("x-forwarded-proto") || (host.startsWith("localhost") ? "http" : "https");
+  return `${proto}://${host}`;
+}
 
 function stripeClient() {
   const key = process.env.STRIPE_SECRET_KEY;
@@ -34,6 +47,7 @@ function stripeClient() {
 }
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
+  const SITE_URL = siteUrl(req);
   const { searchParams } = new URL(req.url);
   const sessionId = searchParams.get("session_id") ?? "";
   const returnTo = searchParams.get("return_to") ?? "/";
@@ -52,8 +66,14 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     console.error("[payment-verify] Stripe-Fehler:", err);
   }
 
-  // Weiterleitung mit ?paid=1 wenn Zahlung bestaetigt, sonst ohne
-  const redirectUrl = new URL(paid ? `${returnTo}?paid=1` : returnTo, SITE_URL);
+  // Weiterleitung mit ?paid=1&sid=<session_id> wenn Zahlung bestaetigt.
+  // sid wird clientseitig an /api/unlock weitergereicht, um die
+  // verschluesselten Report-Details zu entschluesseln.
+  const sep = returnTo.includes("?") ? "&" : "?";
+  const redirectTarget = paid
+    ? `${returnTo}${sep}paid=1&sid=${encodeURIComponent(sessionId)}`
+    : returnTo;
+  const redirectUrl = new URL(redirectTarget, SITE_URL);
   const response = NextResponse.redirect(redirectUrl);
 
   if (paid) {

@@ -3,19 +3,23 @@
 /**
  * Client-Insel fuer den Upload-/Analyse-Flow.
  *
- * Paywall-Logik:
- *  - isPaid=false (Default): Klausel-Header + Zitat sichtbar;
- *    Erklaerung / Rechtsgrundlage / Handlungsempfehlung gelockt.
- *  - isPaid=true (Cookie mc_paid=1 vom Server gesetzt):
- *    Alle Details sichtbar.
+ * Bezahl-Schutz (serverseitig erzwungen):
+ *  - /api/analyze liefert nur GRATIS-Felder im Klartext (Kategorie,
+ *    Klausel-Typ, Status, Zitat) plus einen VERSCHLUESSELTEN Blob
+ *    (`sealed`) mit den Bezahl-Feldern und einer `analysisId`.
+ *  - Ohne Zahlung kann der Client den Blob nicht entschluesseln — die
+ *    Details liegen nie im Klartext vor (auch nicht im Netzwerk-Tab).
+ *  - `details` (entschluesselt) ist die einzige Quelle der Wahrheit fuer
+ *    die Anzeige der Bezahl-Felder.
  *
  * Stripe-Flow:
- *  1. handleCheckout() speichert Ergebnis in sessionStorage,
- *     ruft POST /api/checkout auf, leitet zu Stripe weiter.
- *  2. Nach Zahlung: Stripe → /api/payment-verify → setzt Cookie →
- *     Redirect zu /?paid=1.
- *  3. useEffect: isPaid=true + sessionStorage hat Daten → Ergebnis
- *     wird automatisch wiederhergestellt.
+ *  1. handleCheckout() sichert Ergebnis in sessionStorage und schickt die
+ *     analysisId an POST /api/checkout (-> Stripe-Session-Metadata).
+ *  2. Nach Zahlung: Stripe → /api/payment-verify → Redirect zu
+ *     /?paid=1&sid=<session_id>.
+ *  3. useEffect stellt das Ergebnis wieder her und ruft POST /api/unlock
+ *     auf; der Server verifiziert die Zahlung und gibt die Klartext-
+ *     Details nur fuer die bezahlte analysisId zurueck.
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -23,12 +27,19 @@ import { useEffect, useRef, useState } from "react";
 /* ───────── TYPEN ───────── */
 type AnalysisStatus = "unwirksam" | "wirksam" | "unklar" | "nicht_gefunden";
 
-type AnalyzedClause = {
+// Gratis-Felder — kommen im Klartext vom Server.
+type FreeClause = {
+  idx: number;
   id: string;
   kategorie?: string;
   klausel_typ?: string;
   status: AnalysisStatus;
   zitat: string;
+  hasDetails: boolean;
+};
+
+// Bezahl-Felder — kommen verschluesselt; Klartext erst nach Zahlung via /api/unlock.
+type PaidClause = {
   erklaerung: string;
   rechtsgrundlage?: string;
   rechtsfolge?: string;
@@ -37,7 +48,7 @@ type AnalyzedClause = {
 };
 
 type AnalysisData = {
-  klauseln: AnalyzedClause[];
+  klauseln: FreeClause[];
   zusammenfassung: {
     gesamt: number;
     unwirksam: number;
@@ -47,11 +58,14 @@ type AnalysisData = {
     bewertung: string;
   };
   meta: { model: string; mock: boolean; passes?: number; pass2_recovered?: number; input_chars: number };
+  analysisId: string;
+  sealed: string;
 };
 
 type StoredAnalysis = AnalysisData & { filename: string; pages: number; chars: number };
 
 const STORAGE_KEY = "mc_analysis_v1";
+const DETAILS_KEY = "mc_details_v1";
 
 /* ───────── HILFSFUNKTIONEN ───────── */
 function iconForKategorie(kat?: string): string {
@@ -82,11 +96,11 @@ function Badge({ status }: { status: string }) {
 }
 
 /* ───────── RESULT CARD ───────── */
-function ResultCard({ r, i, isPaid }: { r: AnalyzedClause; i: number; isPaid: boolean }) {
+function ResultCard({ r, i, detail }: { r: FreeClause; i: number; detail?: PaidClause }) {
   const [open, setOpen] = useState(false);
   const title = r.klausel_typ || r.kategorie || "Klausel";
 
-  const hasDetails = !!(r.erklaerung || r.rechtsfolge || r.handlungsempfehlung || r.rechtsgrundlage || r.leitentscheidungen?.length);
+  const hasDetails = r.hasDetails;
 
   return (
     <div
@@ -112,7 +126,7 @@ function ResultCard({ r, i, isPaid }: { r: AnalyzedClause; i: number; isPaid: bo
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
           <Badge status={r.status} />
-          {!isPaid && hasDetails && (
+          {!detail && hasDetails && (
             <svg width="11" height="13" viewBox="0 0 11 13" fill="none" aria-label="gesperrt" style={{ flexShrink: 0 }}>
               <rect x="1" y="5.5" width="9" height="7" rx="1.5" fill="none" stroke="var(--dim)" strokeWidth="1.3"/>
               <path d="M3 5.5V3.5a2.5 2.5 0 015 0v2" stroke="var(--dim)" strokeWidth="1.3" strokeLinecap="round"/>
@@ -134,29 +148,29 @@ function ResultCard({ r, i, isPaid }: { r: AnalyzedClause; i: number; isPaid: bo
             </div>
           )}
 
-          {/* Details — nur wenn bezahlt */}
-          {isPaid ? (
+          {/* Details — nur nach Freischaltung (entschluesselt) */}
+          {detail ? (
             <>
-              {r.erklaerung && (
-                <p style={{ margin: "0 0 12px", fontSize: 13.5, lineHeight: 1.7, color: "var(--fg)" }}>{r.erklaerung}</p>
+              {detail.erklaerung && (
+                <p style={{ margin: "0 0 12px", fontSize: 13.5, lineHeight: 1.7, color: "var(--fg)" }}>{detail.erklaerung}</p>
               )}
-              {r.rechtsfolge && (
+              {detail.rechtsfolge && (
                 <div style={{ margin: "10px 0" }}>
                   <p style={{ fontSize: 11, fontWeight: 600, color: "var(--dim)", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 4 }}>Rechtsfolge</p>
-                  <p style={{ fontSize: 13, lineHeight: 1.6, color: "var(--fg)" }}>{r.rechtsfolge}</p>
+                  <p style={{ fontSize: 13, lineHeight: 1.6, color: "var(--fg)" }}>{detail.rechtsfolge}</p>
                 </div>
               )}
-              {r.handlungsempfehlung && (
+              {detail.handlungsempfehlung && (
                 <div style={{ margin: "10px 0" }}>
                   <p style={{ fontSize: 11, fontWeight: 600, color: "var(--dim)", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 4 }}>Handlungsempfehlung</p>
-                  <p style={{ fontSize: 13, lineHeight: 1.6, color: "var(--fg)" }}>{r.handlungsempfehlung}</p>
+                  <p style={{ fontSize: 13, lineHeight: 1.6, color: "var(--fg)" }}>{detail.handlungsempfehlung}</p>
                 </div>
               )}
               <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 12 }}>
-                {r.rechtsgrundlage && (
-                  <span style={{ fontSize: 11, fontFamily: "var(--mono)", color: "var(--blue)", background: "var(--blue-bg)", padding: "3px 8px", borderRadius: 5 }}>{r.rechtsgrundlage}</span>
+                {detail.rechtsgrundlage && (
+                  <span style={{ fontSize: 11, fontFamily: "var(--mono)", color: "var(--blue)", background: "var(--blue-bg)", padding: "3px 8px", borderRadius: 5 }}>{detail.rechtsgrundlage}</span>
                 )}
-                {r.leitentscheidungen?.map((l, idx) => (
+                {detail.leitentscheidungen?.map((l, idx) => (
                   <span key={idx} style={{ fontSize: 11, fontFamily: "var(--mono)", color: "var(--blue)", background: "var(--blue-bg)", padding: "3px 8px", borderRadius: 5 }}>
                     {l.gericht} {l.aktenzeichen}
                   </span>
@@ -211,21 +225,89 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
   const [analysis, setAnalysis] = useState<AnalysisData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+  // Entschluesselte Bezahl-Details (null = gesperrt). Index = FreeClause.idx.
+  const [details, setDetails] = useState<PaidClause[] | null>(null);
+  const [unlocking, setUnlocking] = useState(false);
+  const [unlockError, setUnlockError] = useState<string | null>(null);
   const ref = useRef<HTMLInputElement>(null);
 
-  // ── Nach Rückkehr von Stripe: Ergebnis aus sessionStorage wiederherstellen ──
+  /* ─── Bezahlte Details serverseitig entschlüsseln ─── */
+  const unlock = async (sessionId: string, sealed: string) => {
+    setUnlocking(true);
+    setUnlockError(null);
+    try {
+      const resp = await fetch("/api/unlock", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ session_id: sessionId, sealed }),
+      });
+      const data: { ok: boolean; error?: string; details?: PaidClause[] } = await resp.json();
+      if (resp.ok && data.ok && Array.isArray(data.details)) {
+        setDetails(data.details);
+        try { sessionStorage.setItem(DETAILS_KEY, JSON.stringify(data.details)); } catch { /* ignore */ }
+      } else {
+        setUnlockError(data.error || "Freischaltung fehlgeschlagen.");
+      }
+    } catch {
+      setUnlockError("Verbindung zum Freischalt-Server fehlgeschlagen.");
+    } finally {
+      setUnlocking(false);
+    }
+  };
+
+  // ── Nach Rückkehr von Stripe (?paid=1&sid=…) bzw. bei bezahltem Browser
+  //    (mc_paid-Cookie): Ergebnis aus sessionStorage wiederherstellen und —
+  //    falls noch nicht geschehen — Details via /api/unlock entschlüsseln. ──
   useEffect(() => {
-    if (!isPaid) return;
+    const params = new URLSearchParams(window.location.search);
+    const justPaid = params.get("paid") === "1";
+    if (!justPaid && !isPaid) return;
+
+    let stored: StoredAnalysis | null = null;
     try {
       const raw = sessionStorage.getItem(STORAGE_KEY);
-      if (!raw) return;
-      const stored: StoredAnalysis = JSON.parse(raw);
+      if (raw) stored = JSON.parse(raw) as StoredAnalysis;
+    } catch { /* ignore */ }
+
+    if (stored) {
       setFile({ name: stored.filename } as File);
       setExtracted({ text: "", pages: stored.pages, chars: stored.chars });
-      setAnalysis({ klauseln: stored.klauseln, zusammenfassung: stored.zusammenfassung, meta: stored.meta });
+      setAnalysis({
+        klauseln: stored.klauseln,
+        zusammenfassung: stored.zusammenfassung,
+        meta: stored.meta,
+        analysisId: stored.analysisId,
+        sealed: stored.sealed,
+      });
       setView("results");
-    } catch { /* sessionStorage-Fehler ignorieren */ }
-  }, [isPaid]);
+
+      // Bereits in dieser Session entschlüsselte Details wiederverwenden …
+      let cached: PaidClause[] | null = null;
+      try {
+        const c = sessionStorage.getItem(DETAILS_KEY);
+        if (c) cached = JSON.parse(c) as PaidClause[];
+      } catch { /* ignore */ }
+
+      if (cached) {
+        setDetails(cached);
+      } else {
+        // … sonst frisch entschlüsseln (braucht die Stripe-Session-ID).
+        const sid = params.get("sid");
+        if (sid && stored.sealed) void unlock(sid, stored.sealed);
+      }
+    }
+
+    // Bezahl-Parameter aus der URL entfernen (kein Re-Trigger bei Reload/Teilen).
+    if (justPaid) {
+      try {
+        const url = new URL(window.location.href);
+        url.searchParams.delete("paid");
+        url.searchParams.delete("sid");
+        window.history.replaceState({}, "", url.pathname + url.search + url.hash);
+      } catch { /* ignore */ }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /* ─── Upload + Analyse ─── */
   const analyze = async (f: File) => {
@@ -298,7 +380,7 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
       return;
     }
 
-    if (!analyzeResp.ok || !analyzeData.ok || !analyzeData.klauseln || !analyzeData.zusammenfassung) {
+    if (!analyzeResp.ok || !analyzeData.ok || !analyzeData.klauseln || !analyzeData.zusammenfassung || !analyzeData.analysisId || !analyzeData.sealed) {
       setError(analyzeData.error || `Analyse fehlgeschlagen (HTTP ${analyzeResp.status}).`);
       setView("idle");
       return;
@@ -308,8 +390,14 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
       klauseln: analyzeData.klauseln,
       zusammenfassung: analyzeData.zusammenfassung,
       meta: analyzeData.meta!,
+      analysisId: analyzeData.analysisId,
+      sealed: analyzeData.sealed,
     };
     setAnalysis(finalAnalysis);
+    // Neue Analyse ist gesperrt, bis (erneut) bezahlt wird.
+    setDetails(null);
+    setUnlockError(null);
+    try { sessionStorage.removeItem(DETAILS_KEY); } catch { /* ignore */ }
 
     // Ergebnis in sessionStorage sichern (fuer Post-Payment-Wiederherstellung)
     try {
@@ -337,7 +425,7 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
       const resp = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ returnTo: "/" }),
+        body: JSON.stringify({ returnTo: "/", analysisId: analysis?.analysisId ?? "" }),
       });
       const data: { ok: boolean; url?: string; error?: string } = await resp.json();
       if (data.url) {
@@ -404,7 +492,7 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
       return;
     }
 
-    if (!analyzeResp.ok || !analyzeData.ok || !analyzeData.klauseln || !analyzeData.zusammenfassung) {
+    if (!analyzeResp.ok || !analyzeData.ok || !analyzeData.klauseln || !analyzeData.zusammenfassung || !analyzeData.analysisId || !analyzeData.sealed) {
       setError(analyzeData.error || `Analyse fehlgeschlagen (HTTP ${analyzeResp.status}).`);
       setView("idle");
       return;
@@ -414,8 +502,13 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
       klauseln: analyzeData.klauseln,
       zusammenfassung: analyzeData.zusammenfassung,
       meta: analyzeData.meta!,
+      analysisId: analyzeData.analysisId,
+      sealed: analyzeData.sealed,
     };
     setAnalysis(finalAnalysis);
+    setDetails(null);
+    setUnlockError(null);
+    try { sessionStorage.removeItem(DETAILS_KEY); } catch { /* ignore */ }
 
     try {
       const stored: StoredAnalysis = { ...finalAnalysis, filename: "Manuell eingegeben", pages: 1, chars: text.length };
@@ -437,7 +530,11 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
     setExtracted(null);
     setAnalysis(null);
     setManualText("");
+    setDetails(null);
+    setUnlocking(false);
+    setUnlockError(null);
     try { sessionStorage.removeItem(STORAGE_KEY); } catch {}
+    try { sessionStorage.removeItem(DETAILS_KEY); } catch {}
   };
 
   const klauseln = analysis?.klauseln ?? [];
@@ -447,6 +544,7 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
   const wirksamCount = analysis?.zusammenfassung.wirksam ?? klauseln.filter((r) => r.status === "wirksam").length;
   const unklarCount = analysis?.zusammenfassung.unklar ?? klauseln.filter((r) => r.status === "unklar").length;
   const mockMode = analysis?.meta.mock ?? false;
+  const unlocked = details !== null;
 
   return (
     <>
@@ -657,7 +755,7 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
               {/* Klausel-Karten */}
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 {filtered.map((r, i) => (
-                  <ResultCard key={`${r.id || "x"}-${i}`} r={r} i={i} isPaid={isPaid} />
+                  <ResultCard key={`${r.id || "x"}-${i}`} r={r} i={i} detail={details ? details[r.idx] : undefined} />
                 ))}
               </div>
 
@@ -674,8 +772,8 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
             </div>
           )}
 
-          {/* ───── PAYWALL-BANNER (sticky unten, nur wenn nicht bezahlt) ───── */}
-          {view === "results" && !isPaid && (
+          {/* ───── PAYWALL-BANNER (sticky unten, nur solange nicht freigeschaltet) ───── */}
+          {view === "results" && !unlocked && (
             <div
               style={{
                 position: "fixed",
@@ -696,35 +794,55 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
             >
               <div style={{ flex: 1, minWidth: 0 }}>
                 <p style={{ color: "#fff", fontSize: 14, fontWeight: 600, margin: 0, letterSpacing: -0.2 }}>
-                  Alle Details freischalten
+                  {unlocking
+                    ? "Zahlung erfolgreich — Report wird freigeschaltet …"
+                    : unlockError
+                    ? "Freischaltung fehlgeschlagen"
+                    : "Alle Details freischalten"}
                 </p>
                 <p style={{ color: "rgba(255,255,255,.55)", fontSize: 12, margin: "2px 0 0" }}>
-                  Erklärungen · Rechtsgrundlagen · BGH-Urteile · Handlungsempfehlungen
+                  {unlockError
+                    ? unlockError
+                    : "Erklärungen · Rechtsgrundlagen · BGH-Urteile · Handlungsempfehlungen"}
                 </p>
               </div>
               <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 6, flexShrink: 0 }}>
-                <button
-                  onClick={handleCheckout}
-                  disabled={checkoutLoading}
-                  style={{
-                    background: checkoutLoading ? "#888" : "#1B2B5E",
-                    color: "#fff",
-                    border: "none",
-                    padding: "12px 28px",
-                    borderRadius: 10,
-                    fontSize: 15,
-                    fontWeight: 700,
-                    cursor: checkoutLoading ? "wait" : "pointer",
-                    letterSpacing: -0.3,
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {checkoutLoading ? "Weiterleitung …" : "Jetzt freischalten — 2,99 €"}
-                </button>
-                <p style={{ color: "rgba(255,255,255,.45)", fontSize: 10.5, margin: 0, textAlign: "right", lineHeight: 1.4, maxWidth: 320 }}>
-                  Mit Klick verlangen Sie ausdrücklich die sofortige Ausführung und bestätigen, dass Ihr Widerrufsrecht damit erlischt (§&nbsp;356 Abs.&nbsp;5 BGB).{" "}
-                  <a href="/agb" style={{ color: "rgba(255,255,255,.7)", textDecoration: "underline" }}>AGB</a>
-                </p>
+                {unlocking ? (
+                  <span style={{ color: "rgba(255,255,255,.8)", fontSize: 13, fontWeight: 600, padding: "12px 4px", whiteSpace: "nowrap" }}>
+                    Report wird entschlüsselt …
+                  </span>
+                ) : unlockError ? (
+                  /* Bereits bezahlt, aber Freischaltung scheiterte — kein erneuter Kauf, Support-Hinweis. */
+                  <p style={{ color: "rgba(255,255,255,.7)", fontSize: 12, margin: 0, textAlign: "right", lineHeight: 1.4, maxWidth: 320 }}>
+                    Bitte kontaktiere uns mit deiner Zahlungsbestätigung:{" "}
+                    <a href="mailto:klaremiete@gmx.de" style={{ color: "#fff", textDecoration: "underline" }}>klaremiete@gmx.de</a>
+                  </p>
+                ) : (
+                  <>
+                    <button
+                      onClick={handleCheckout}
+                      disabled={checkoutLoading}
+                      style={{
+                        background: checkoutLoading ? "#888" : "#1B2B5E",
+                        color: "#fff",
+                        border: "none",
+                        padding: "12px 28px",
+                        borderRadius: 10,
+                        fontSize: 15,
+                        fontWeight: 700,
+                        cursor: checkoutLoading ? "wait" : "pointer",
+                        letterSpacing: -0.3,
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {checkoutLoading ? "Weiterleitung …" : "Jetzt freischalten — 2,99 €"}
+                    </button>
+                    <p style={{ color: "rgba(255,255,255,.45)", fontSize: 10.5, margin: 0, textAlign: "right", lineHeight: 1.4, maxWidth: 320 }}>
+                      Mit Klick verlangen Sie ausdrücklich die sofortige Ausführung und bestätigen, dass Ihr Widerrufsrecht damit erlischt (§&nbsp;356 Abs.&nbsp;5 BGB).{" "}
+                      <a href="/agb" style={{ color: "rgba(255,255,255,.7)", textDecoration: "underline" }}>AGB</a>
+                    </p>
+                  </>
+                )}
               </div>
             </div>
           )}
