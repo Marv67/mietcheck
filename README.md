@@ -11,11 +11,19 @@ Automatisierte Ersteinschätzung deutscher Wohnraummietverträge. Lädt einen Ve
 ```bash
 npm install
 cp .env.local.example .env.local
-# In .env.local: ANTHROPIC_API_KEY=sk-ant-... eintragen
+# In .env.local eintragen (Details siehe .env.local.example):
+#   ANTHROPIC_API_KEY   – sonst Mock-Modus
+#   STRIPE_SECRET_KEY   – für den Bezahl-Flow (sk_test_… im Test)
+#   UNLOCK_SECRET       – Report-Verschlüsselung; erzeugen: openssl rand -hex 32
 npm run dev
 ```
 
 Läuft auf `http://localhost:3000` (oder einem freien Port).
+
+> **Deploy (Vercel):** Dieselben Env-Variablen in den Project Settings setzen.
+> `UNLOCK_SECRET` ist in Produktion **Pflicht** — ohne ihn schlägt `/api/analyze`
+> fail-closed fehl (die Bezahl-Details werden serverseitig verschlüsselt).
+> `NEXT_PUBLIC_SITE_URL` auf die echte Domain setzen.
 
 **Ohne API-Key** läuft die Analyse-Route im **Mock-Modus** — sie matched ein paar bekannte Patterns per Regex (Schönheitsreparaturen, Endrenovierung, Tierhaltungsverbot, Kaution > 3 NKM, Kleinreparaturen) und gibt strukturierte Sample-Ergebnisse zurück. Auf der Results-Seite erscheint dann ein gelbes Mock-Banner.
 
@@ -31,20 +39,24 @@ Läuft auf `http://localhost:3000` (oder einem freien Port).
 mietcheck/
 ├── app/
 │   ├── api/
-│   │   ├── extract/route.ts   # PDF-Text-Extraktion (pdf-parse, Node-Runtime)
-│   │   └── analyze/route.ts   # LLM-Analyse (Anthropic Claude)
+│   │   ├── extract/route.ts        # PDF-Text-Extraktion (pdf-parse, Node-Runtime)
+│   │   ├── analyze/route.ts        # LLM-Analyse; trennt Gratis-/Bezahl-Felder, versiegelt
+│   │   ├── checkout/route.ts       # Stripe-Checkout-Session (2,99 €)
+│   │   ├── payment-verify/route.ts # Stripe-Redirect-Ziel, verifiziert Zahlung
+│   │   └── unlock/route.ts         # entschlüsselt Bezahl-Details nach Zahlung
 │   ├── layout.tsx             # Root-Layout + SEO-Metadata
 │   ├── page.tsx               # Single-page app: Landing / Upload / Loading / Results
 │   └── globals.css
 ├── lib/
 │   ├── analyze.ts             # Anthropic-Call + Mock-Fallback + Enrichment
-│   └── clauses-index.ts       # Kompakter Klausel-Index für den Prompt + ID-Lookup
+│   ├── clauses-index.ts       # Kompakter Klausel-Index für den Prompt + ID-Lookup
+│   └── seal.ts                # AES-256-GCM Ver-/Entschlüsselung der Bezahl-Felder
 ├── data/
 │   ├── klausel_db.json        # 260 Klauseln · 76 Kategorien · 377 Leitentscheidungen
 │   ├── website_db.json        # Erweiterte Wissensdatenbank (Mietminderung, Nebenkosten, Mietpreisbremse, Musterschreiben)
 │   ├── system_prompt.md       # Original-Konzeptpapier (Referenz)
 │   └── MVP_Bauplan.md         # Strategie- und Roadmap-Dokument
-├── .env.local.example         # Template für ANTHROPIC_API_KEY
+├── .env.local.example         # Template für alle Env-Variablen (Anthropic, Stripe, UNLOCK_SECRET)
 ├── tailwind.config.ts
 └── next.config.mjs            # externalisiert pdf-parse + pdfjs-dist für Node-Bundling
 ```
@@ -75,14 +87,21 @@ Was läuft:
 - [x] Results-View mit Statistik, Filter, ausklappbaren Klausel-Karten, Mock-Banner, Risiko-Indikator
 - [x] Kuratierte Klausel-DB (260 Einträge · 76 Kategorien · 377 Leitentscheidungen · 285 Norm-Verweise)
 
-Was noch fehlt für echten Production-Launch:
+Inzwischen ergänzt:
 
-- [ ] **Persistenz/Auth** (Supabase EU-Frankfurt für Vollreport-Käufer)
-- [ ] **Payment** (Lemon Squeezy als Merchant of Record empfohlen)
-- [ ] **Mietpreisbremse-Check** als eigenes Feature (Daten in `website_db.json` schon da)
+- [x] **Payment** via **Stripe Checkout** (2,99 € Einmalzahlung, `card` + `paypal`)
+- [x] **Bezahl-Schutz serverseitig**: Bezahl-Felder AES-256-GCM-verschlüsselt (`lib/seal.ts`), Entschlüsselung erst nach verifizierter Zahlung (`/api/unlock`) — kein DevTools-Bypass mehr
+- [x] **Mietpreisbremse-Check**, Mietminderungs-Rechner, Musterschreiben-Generator
+- [x] **Impressum, Datenschutz, AGB, Kontakt** ausgearbeitet
+- [x] **Vercel-Deployment** (Auto-Deploy vom `main`-Branch)
+
+Was noch fehlt / offene Betreiber-Aufgaben:
+
 - [ ] **OCR-Pipeline** für gescannte Image-PDFs (aktuell: `empty_text`-Fehler)
-- [ ] **Impressum, Datenschutz, AGB** ausarbeiten (Footer-Links sind Platzhalter)
-- [ ] Domain + Vercel-Deployment (EU-Region fra1)
+- [ ] **Stripe Live-Key** statt Test-Key + Webhook (optional; Verifizierung läuft on-demand)
+- [ ] **`UNLOCK_SECRET`** als Vercel-Env-Variable setzen (Produktion sonst fail-closed)
+- [ ] **Gewerbe anmelden** + DPAs (Anthropic, Vercel, Stripe) gegenzeichnen
+- [ ] Persistenz optional (aktuell bewusst zustandslos & datensparsam — keine Vertragsspeicherung)
 
 Plan im Detail: siehe `data/MVP_Bauplan.md`.
 
