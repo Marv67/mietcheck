@@ -105,8 +105,15 @@ export async function POST(req: NextRequest): Promise<NextResponse<AnalyzeOk | A
       sealed,
     });
   } catch (err) {
-    const msg = err instanceof Error ? err.message : "Unbekannter Fehler.";
     console.error("[analyze] Fehler:", err);
-    return NextResponse.json({ ok: false, error: `Analyse fehlgeschlagen: ${msg}` }, { status: 500 });
+    // Internes Fehlerdetail bleibt im Server-Log. An den Client geben wir es
+    // nur im Dev — sonst koennte z. B. ein fehlendes UNLOCK_SECRET oder ein
+    // Anbieter-Fehlertext nach aussen leaken.
+    const detail = err instanceof Error ? err.message : "Unbekannter Fehler.";
+    const clientError =
+      process.env.NODE_ENV === "production"
+        ? "Analyse fehlgeschlagen. Bitte versuchen Sie es erneut."
+        : `Analyse fehlgeschlagen: ${detail}`;
+    return NextResponse.json({ ok: false, error: clientError }, { status: 500 });
   }
 }

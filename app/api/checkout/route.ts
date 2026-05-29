@@ -97,11 +97,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json({ ok: true, url: session.url });
   } catch (err) {
-    const msg = err instanceof Error ? err.message : "Unbekannter Fehler.";
-    console.error("[checkout] Stripe-Fehler:", msg);
-    return NextResponse.json(
-      { ok: false, error: `Checkout konnte nicht gestartet werden: ${msg}` },
-      { status: 500 },
-    );
+    const detail = err instanceof Error ? err.message : "Unbekannter Fehler.";
+    console.error("[checkout] Stripe-Fehler:", detail);
+    // Rohe Stripe-Fehlermeldung nur im Dev an den Client geben.
+    const clientError =
+      process.env.NODE_ENV === "production"
+        ? "Checkout konnte nicht gestartet werden. Bitte versuchen Sie es später erneut."
+        : `Checkout konnte nicht gestartet werden: ${detail}`;
+    return NextResponse.json({ ok: false, error: clientError }, { status: 500 });
   }
 }

@@ -105,9 +105,15 @@ export async function POST(req: NextRequest): Promise<NextResponse<ExtractResult
         { status: 422 },
       );
     }
-    const msg = err instanceof Error ? err.message : "Unbekannter Fehler beim Parsen.";
+    const detail = err instanceof Error ? err.message : "Unbekannter Fehler beim Parsen.";
+    console.error("[extract] Parse-Fehler:", err);
+    // Rohe Parser-Fehlermeldung nur im Dev an den Client geben.
+    const clientError =
+      process.env.NODE_ENV === "production"
+        ? "PDF konnte nicht gelesen werden. Bitte prüfen Sie die Datei und versuchen Sie es erneut."
+        : `PDF konnte nicht gelesen werden: ${detail}`;
     return NextResponse.json(
-      { ok: false, code: "parse_failed", error: `PDF konnte nicht gelesen werden: ${msg}` },
+      { ok: false, code: "parse_failed", error: clientError },
       { status: 422 },
     );
   } finally {
