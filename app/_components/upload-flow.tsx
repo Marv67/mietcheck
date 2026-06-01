@@ -229,6 +229,8 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
   const [details, setDetails] = useState<PaidClause[] | null>(null);
   const [unlocking, setUnlocking] = useState(false);
   const [unlockError, setUnlockError] = useState<string | null>(null);
+  // Bezahlt (?paid=1), aber die Analyse-Daten dieser Sitzung fehlen (Tab zu etc.).
+  const [paidNoData, setPaidNoData] = useState(false);
   const ref = useRef<HTMLInputElement>(null);
 
   /* ─── Bezahlte Details serverseitig entschlüsseln ─── */
@@ -295,6 +297,13 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
         const sid = params.get("sid");
         if (sid && stored.sealed) void unlock(sid, stored.sealed);
       }
+    } else if (justPaid) {
+      // Bezahlt (?paid=1), aber die Analyse-Daten dieser Sitzung sind nicht
+      // mehr da (Tab geschlossen, anderer Browser, Private-Mode). Da wir den
+      // Vertrag bewusst nicht serverseitig speichern, ist der Report nicht
+      // wiederherstellbar → ehrlicher Hinweis mit Support-Weg statt stiller
+      // Rückkehr zur Startseite.
+      setPaidNoData(true);
     }
 
     // Bezahl-Parameter aus der URL entfernen (kein Re-Trigger bei Reload/Teilen).
@@ -313,6 +322,7 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
   const analyze = async (f: File) => {
     setFile(f);
     setError(null);
+    setPaidNoData(false);
     setExtracted(null);
     setAnalysis(null);
     setView("loading");
@@ -456,6 +466,7 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
     }
     setFile({ name: "Manuell eingegeben" } as File);
     setError(null);
+    setPaidNoData(false);
     setExtracted(null);
     setAnalysis(null);
     setView("loading");
@@ -533,6 +544,7 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
     setDetails(null);
     setUnlocking(false);
     setUnlockError(null);
+    setPaidNoData(false);
     try { sessionStorage.removeItem(STORAGE_KEY); } catch {}
     try { sessionStorage.removeItem(DETAILS_KEY); } catch {}
   };
@@ -550,6 +562,19 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
     <>
       {/* ───── INLINE UPLOAD-ZONE ───── */}
       <div id="upload" style={{ scrollMarginTop: 80, maxWidth: 480, margin: "0 auto" }}>
+
+        {/* Bezahlt, aber Sitzungsdaten nicht mehr verfügbar */}
+        {paidNoData && (
+          <div role="status" style={{ margin: "0 0 16px", background: "#EFF6FF", border: "1px solid #BFDBFE", color: "#1E3A8A", borderRadius: 12, padding: "14px 16px", fontSize: 13, lineHeight: 1.55 }}>
+            <strong style={{ fontWeight: 700, display: "block", marginBottom: 4 }}>Zahlung eingegangen — danke!</strong>
+            Aus Datenschutzgründen speichern wir deinen Vertrag nicht dauerhaft. Die Daten
+            dieser Sitzung sind nicht mehr verfügbar (z.&nbsp;B. weil der Tab zwischendurch
+            geschlossen wurde), daher lässt sich der bezahlte Report hier nicht automatisch
+            anzeigen. Bitte melde dich kurz mit deiner Stripe-Zahlungsbestätigung unter{" "}
+            <a href="mailto:klaremiete@gmx.de" style={{ color: "#1B2B5E", textDecoration: "underline", fontWeight: 600 }}>klaremiete@gmx.de</a>{" "}
+            — wir erstatten die Zahlung oder erstellen den Report neu.
+          </div>
+        )}
 
         {/* Tab-Toggle */}
         <div style={{ display: "flex", gap: 4, marginBottom: 16, background: "rgba(0,0,0,.05)", borderRadius: 10, padding: 4 }}>
