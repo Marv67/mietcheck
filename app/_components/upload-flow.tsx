@@ -231,6 +231,7 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
   const [unlockError, setUnlockError] = useState<string | null>(null);
   // Bezahlt (?paid=1), aber die Analyse-Daten dieser Sitzung fehlen (Tab zu etc.).
   const [paidNoData, setPaidNoData] = useState(false);
+  const [checkoutCancelled, setCheckoutCancelled] = useState(false);
   const ref = useRef<HTMLInputElement>(null);
 
   /* ─── Bezahlte Details serverseitig entschlüsseln ─── */
@@ -263,7 +264,8 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const justPaid = params.get("paid") === "1";
-    if (!justPaid && !isPaid) return;
+    const justCancelled = params.get("cancelled") === "1";
+    if (!justPaid && !justCancelled && !isPaid) return;
 
     let stored: StoredAnalysis | null = null;
     try {
@@ -282,6 +284,7 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
         sealed: stored.sealed,
       });
       setView("results");
+      if (justCancelled) setCheckoutCancelled(true);
 
       // Bereits in dieser Session entschlüsselte Details wiederverwenden …
       let cached: PaidClause[] | null = null;
@@ -307,6 +310,13 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
     }
 
     // Bezahl-Parameter aus der URL entfernen (kein Re-Trigger bei Reload/Teilen).
+    if (justCancelled) {
+      try {
+        const url = new URL(window.location.href);
+        url.searchParams.delete("cancelled");
+        window.history.replaceState({}, "", url.pathname + url.search + url.hash);
+      } catch { /* ignore */ }
+    }
     if (justPaid) {
       try {
         const url = new URL(window.location.href);
@@ -430,6 +440,7 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
 
   /* ─── Stripe Checkout starten ─── */
   const handleCheckout = async () => {
+    setCheckoutCancelled(false);
     setCheckoutLoading(true);
     try {
       const resp = await fetch("/api/checkout", {
@@ -823,11 +834,15 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
                     ? "Zahlung erfolgreich — Report wird freigeschaltet …"
                     : unlockError
                     ? "Freischaltung fehlgeschlagen"
+                    : checkoutCancelled
+                    ? "Zahlung abgebrochen"
                     : "Alle Details freischalten"}
                 </p>
                 <p style={{ color: "rgba(255,255,255,.55)", fontSize: 12, margin: "2px 0 0" }}>
                   {unlockError
                     ? unlockError
+                    : checkoutCancelled
+                    ? "Kein Betrag wurde belastet — du kannst jetzt freischalten."
                     : "Erklärungen · Rechtsgrundlagen · BGH-Urteile · Handlungsempfehlungen"}
                 </p>
               </div>
