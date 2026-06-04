@@ -3,6 +3,7 @@ import { allClauseSlugs } from "./_lib/clauses";
 import { allSzenarioSlugs } from "./_lib/mietminderung";
 import { allBundeslandSlugs } from "./_lib/mietpreisbremse";
 import { allVorlagenSlugs } from "./_lib/musterschreiben";
+import { SITE_URL } from "@/lib/site-url";
 
 /**
  * sitemap.xml-Generator (Next.js App Router).
@@ -20,8 +21,6 @@ import { allVorlagenSlugs } from "./_lib/musterschreiben";
  *
  * SEO-TODO: NEXT_PUBLIC_SITE_URL auf echte Domain setzen.
  */
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://mietcheck.de";
-
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 

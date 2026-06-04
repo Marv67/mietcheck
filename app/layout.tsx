@@ -44,12 +44,7 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
-/**
- * SEO-TODO: NEXT_PUBLIC_SITE_URL via Vercel-Env setzen, sobald die echte
- * Domain steht. Wert wird als metadataBase fuer alle absoluten URLs
- * (Open-Graph-Images, canonical, etc.) verwendet.
- */
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://mietcheck.de";
+import { SITE_URL } from "@/lib/site-url";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

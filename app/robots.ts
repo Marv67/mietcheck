@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { SITE_URL } from "@/lib/site-url";
 
 /**
  * robots.txt-Generator (Next.js App Router).
@@ -14,8 +15,6 @@ import type { MetadataRoute } from "next";
  * SEO-TODO: Sobald die echte Domain feststeht, hier in
  * sitemap-URL den Platzhalter ersetzen (oder via env-Var lesen).
  */
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://mietcheck.de";
-
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
