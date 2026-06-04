@@ -417,6 +417,7 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
     // Neue Analyse ist gesperrt, bis (erneut) bezahlt wird.
     setDetails(null);
     setUnlockError(null);
+    setCheckoutCancelled(false);
     try { sessionStorage.removeItem(DETAILS_KEY); } catch { /* ignore */ }
 
     // Ergebnis in sessionStorage sichern (fuer Post-Payment-Wiederherstellung)
@@ -530,6 +531,7 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
     setAnalysis(finalAnalysis);
     setDetails(null);
     setUnlockError(null);
+    setCheckoutCancelled(false);
     try { sessionStorage.removeItem(DETAILS_KEY); } catch { /* ignore */ }
 
     try {
@@ -555,6 +557,7 @@ export default function UploadFlow({ isPaid = false }: { isPaid?: boolean }) {
     setDetails(null);
     setUnlocking(false);
     setUnlockError(null);
+    setCheckoutCancelled(false);
     setPaidNoData(false);
     try { sessionStorage.removeItem(STORAGE_KEY); } catch {}
     try { sessionStorage.removeItem(DETAILS_KEY); } catch {}
