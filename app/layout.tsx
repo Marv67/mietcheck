@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { DM_Sans, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { JsonLd, organizationJsonLd, websiteJsonLd } from "./_lib/jsonld";
+import { Analytics } from "@vercel/analytics/react";
 
 /*
  * next/font/google self-hostet die Fonts ueber Next.js (kein Request
@@ -129,6 +130,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <JsonLd data={organizationJsonLd()} id="ld-org" />
         <JsonLd data={websiteJsonLd()} id="ld-website" />
         {children}
+        {/* Cookie-freies, IP-anonymisiertes Nutzungsstatistik-Tool — keine PII */}
+        <Analytics />
       </body>
     </html>
   );

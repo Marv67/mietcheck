@@ -243,6 +243,22 @@ export default function DatenschutzPage() {
               Abs. 2 lit. c DSGVO. Vercel ist zudem Teilnehmer am EU-US Data Privacy Framework.
             </p>
 
+            {/* ── 4a. Vercel Analytics ── */}
+            <h3>Vercel Web Analytics</h3>
+            <p>
+              Zur anonymen Nutzungsauswertung setzen wir <strong>Vercel Web Analytics</strong> ein.
+              Der Dienst setzt <strong>keine Cookies</strong> und speichert keine IP-Adressen.
+              Erfasst werden ausschließlich aggregierte, nicht-personenbezogene Metriken
+              (aufgerufene Seite, Herkunftsland, Gerätetyp, Browser, Referrer). Eine Rückführung
+              auf Einzelpersonen ist nicht möglich. Rechtsgrundlage ist unser berechtigtes
+              Interesse an der anonymen Verbesserung des Angebots (Art. 6 Abs. 1 lit. f DSGVO).
+              Anbieter: Vercel Inc., USA — die Übermittlung erfolgt auf Basis von SCC.
+              Datenschutzerklärung:{" "}
+              <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer">
+                vercel.com/legal/privacy-policy
+              </a>
+            </p>
+
             {/* ── 5. Zahlungsabwicklung (Stripe) ── */}
             <h2>5. Zahlungsabwicklung (Stripe)</h2>
             <p>
