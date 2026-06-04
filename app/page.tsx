@@ -44,8 +44,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Page() {
-  const isPaid = cookies().get("mc_paid")?.value === "1";
+export default async function Page() {
+  const cookieStore = await cookies();
+  const isPaid = cookieStore.get("mc_paid")?.value === "1";
   return (
     <div
       style={
