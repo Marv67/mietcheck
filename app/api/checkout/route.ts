@@ -46,7 +46,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     body = {};
   }
 
-  const returnTo = typeof body.returnTo === "string" ? body.returnTo : "/";
+  // Nur relative Pfade erlauben — verhindert Open Redirect
+  const rawReturnTo = typeof body.returnTo === "string" ? body.returnTo : "/";
+  const returnTo = rawReturnTo.startsWith("/") && !rawReturnTo.startsWith("//") ? rawReturnTo : "/";
   const analysisId = typeof body.analysisId === "string" ? body.analysisId : "";
   const SITE_URL = siteUrl(req);
 

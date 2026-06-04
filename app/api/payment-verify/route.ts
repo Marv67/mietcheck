@@ -50,7 +50,9 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const SITE_URL = siteUrl(req);
   const { searchParams } = new URL(req.url);
   const sessionId = searchParams.get("session_id") ?? "";
-  const returnTo = searchParams.get("return_to") ?? "/";
+  // Nur relative Pfade erlauben — verhindert Open Redirect via manipuliertem return_to
+  const rawReturnTo = searchParams.get("return_to") ?? "/";
+  const returnTo = rawReturnTo.startsWith("/") && !rawReturnTo.startsWith("//") ? rawReturnTo : "/";
 
   // Fallback-Redirect ohne Cookie wenn keine session_id
   if (!sessionId) {
