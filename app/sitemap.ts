@@ -87,8 +87,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...mietminderungEntries,
     ...mpbEntries,
     ...musterEntries,
-    // Impressum + Datenschutz haben jetzt substanziellen Inhalt und sind
-    // indexierbar. AGB + Kontakt bleiben Stubs (noindex) bis zum Live-Gang.
+    // Alle vier Legal-Seiten haben substanziellen Inhalt und sind indexierbar.
     {
       url: `${SITE_URL}/impressum`,
       lastModified: now,
@@ -100,6 +99,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: "yearly",
       priority: 0.3,
+    },
+    {
+      url: `${SITE_URL}/agb`,
+      lastModified: now,
+      changeFrequency: "yearly",
+      priority: 0.2,
+    },
+    {
+      url: `${SITE_URL}/kontakt`,
+      lastModified: now,
+      changeFrequency: "yearly",
+      priority: 0.2,
     },
   ];
 }
