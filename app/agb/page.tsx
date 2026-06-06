@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SITE_URL } from "@/lib/site-url";
+
+const SITE_HOST = SITE_URL.replace(/^https?:\/\//, "");
 
 export const metadata: Metadata = {
   title: "Allgemeine Geschäftsbedingungen",
@@ -104,7 +107,7 @@ export default function AgbPage() {
             </p>
             <p>
               (nachfolgend <strong>„Anbieter"</strong>) und den Nutzerinnen und Nutzern des
-              Dienstes Klare Miete unter <Link href="/" style={{ color: "var(--blue)" }}>mietcheck-three.vercel.app</Link>{" "}
+              Dienstes Klare Miete unter <Link href="/" style={{ color: "var(--blue)" }}>{SITE_HOST}</Link>{" "}
               (nachfolgend <strong>„Nutzer"</strong>).
             </p>
             <p>
@@ -351,7 +354,7 @@ export default function AgbPage() {
               Der Anbieter behält sich vor, diese AGB mit Wirkung für die Zukunft zu ändern.
               Über wesentliche Änderungen werden Nutzer, soweit möglich, informiert. Die
               jeweils aktuelle Fassung ist stets unter{" "}
-              <Link href="/agb" style={{ color: "var(--blue)" }}>mietcheck-three.vercel.app/agb</Link>{" "}
+              <Link href="/agb" style={{ color: "var(--blue)" }}>{SITE_HOST}/agb</Link>{" "}
               abrufbar.
             </p>
 

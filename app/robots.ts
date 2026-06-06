@@ -12,8 +12,8 @@ import { SITE_URL } from "@/lib/site-url";
  * Indexieren von API-Routes als Junk-Pages. Crawl-Budget wird auf
  * Content-Seiten konzentriert.
  *
- * SEO-TODO: Sobald die echte Domain feststeht, hier in
- * sitemap-URL den Platzhalter ersetzen (oder via env-Var lesen).
+ * NEXT_PUBLIC_SITE_URL wird über Vercel-Env gesetzt; bei Domain-Wechsel
+ * dort anpassen — robots.ts liest automatisch den neuen Wert.
  */
 export default function robots(): MetadataRoute.Robots {
   return {

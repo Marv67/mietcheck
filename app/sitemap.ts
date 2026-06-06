@@ -19,7 +19,8 @@ import { SITE_URL } from "@/lib/site-url";
  * Mit 260+ Klausel-URLs sehr wichtig — ohne Sitemap braucht Google
  * Wochen bis Monate, alle URLs zu finden.
  *
- * SEO-TODO: NEXT_PUBLIC_SITE_URL auf echte Domain setzen.
+ * NEXT_PUBLIC_SITE_URL wird über Vercel-Env gesetzt; bei Domain-Wechsel
+ * einfach den Wert dort aktualisieren.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
