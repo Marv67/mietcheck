@@ -301,8 +301,9 @@ export default function DatenschutzPage() {
             {/* ── 6. Cookies ── */}
             <h2>6. Cookies</h2>
             <div className="notice-box">
-              Wir verwenden <strong>keine Tracking-Cookies</strong>, kein Web-Analytics
+              Wir verwenden <strong>keine Tracking-Cookies</strong>, kein cookie-basiertes Web-Analytics
               (Google Analytics, Matomo etc.) und keine Retargeting- oder Social-Media-Pixel.
+              Für anonyme Nutzungsstatistiken setzen wir cookie-freies Vercel Web Analytics ein (siehe §&nbsp;4a).
               Ein Cookie-Banner ist daher nicht erforderlich.
             </div>
             <p>
