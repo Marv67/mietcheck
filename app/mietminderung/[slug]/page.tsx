@@ -21,8 +21,7 @@ import {
   parseQuote,
 } from "../../_lib/mietminderung";
 import { JsonLd } from "../../_lib/jsonld";
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://mietcheck.de";
+import { SITE_URL } from "@/lib/site-url";
 
 type RouteParams = { slug: string };
 

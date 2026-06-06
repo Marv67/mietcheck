@@ -17,8 +17,7 @@ import {
   MPB_PRUEFSCHEMA,
 } from "../../_lib/mietpreisbremse";
 import { JsonLd } from "../../_lib/jsonld";
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://mietcheck.de";
+import { SITE_URL } from "@/lib/site-url";
 
 type RouteParams = { bundesland: string };
 

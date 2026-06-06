@@ -16,8 +16,7 @@
  */
 
 import type { FaqItem } from "./landing-data";
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://mietcheck.de";
+import { SITE_URL } from "@/lib/site-url";
 
 export function organizationJsonLd() {
   return {
